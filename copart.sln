@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parser", "Parser\Parser.csproj", "{523027C1-64EA-4998-9079-D175E330BADC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BidsParser", "Parser\BidsParser.csproj", "{523027C1-64EA-4998-9079-D175E330BADC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebService", "WebService\WebService.csproj", "{CF7094AD-94E9-4D2B-8275-4815850223EB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebService.Tests", "WebService.Tests\WebService.Tests.csproj", "{9C3A4B9F-A616-410A-AB11-F0906504ABC2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarsParser", "CarsParser\CarsParser.csproj", "{68006720-EACB-4ACC-A87F-9E291729A0A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{9C3A4B9F-A616-410A-AB11-F0906504ABC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C3A4B9F-A616-410A-AB11-F0906504ABC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C3A4B9F-A616-410A-AB11-F0906504ABC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68006720-EACB-4ACC-A87F-9E291729A0A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68006720-EACB-4ACC-A87F-9E291729A0A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68006720-EACB-4ACC-A87F-9E291729A0A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68006720-EACB-4ACC-A87F-9E291729A0A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

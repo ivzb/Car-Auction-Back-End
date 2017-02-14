@@ -9,11 +9,11 @@
 
     public class MainClass
     {
-        private const string CarsPath = @"C:\Users\izahariev\Desktop\cars\2-9-17"; 
+        private const string BidsPath = @"C:\Users\izahariev\Documents\twork\daniauto data\bids\February\14th"; 
         public static void Main(string[] args)
         {
             Parser parser = new Parser();
-            parser.Execute(CarsPath);
+            parser.Execute(BidsPath);
             Car[] cars = parser.Cars;
 
             DbInflater dbInflater = new DbInflater();
