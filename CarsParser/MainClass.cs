@@ -10,8 +10,8 @@
 
             using (ILifetimeScope scope = container.BeginLifetimeScope())
             {
-                IApplication app = scope.Resolve<IApplication>();
-                app.Run();
+                IApplication application = scope.Resolve<IApplication>();
+                application.Run();
             } 
         }
     }

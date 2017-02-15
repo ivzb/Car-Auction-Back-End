@@ -12,32 +12,32 @@
     {
         public static IContainer Configure()
         {
-            var builder = new ContainerBuilder();
+            ContainerBuilder builder = new ContainerBuilder();
 
-            builder.RegisterType<Application>()
+            builder
+                .RegisterType<Application>()
                 .As<IApplication>();
 
-            builder.Register(x => new daniautoEntities())
+            builder
+                .Register(x => new daniautoEntities())
                 .As<DbContext>();
-                //.InstancePerRequest();
 
-            builder.RegisterGeneric(typeof(DbRepository<>))
+            builder
+                .RegisterGeneric(typeof(DbRepository<>))
                 .As(typeof(IDbRepository<>));
-                //.InstancePerRequest();
 
-            builder.RegisterGeneric(typeof(DbRepository<,>))
+            builder
+                .RegisterGeneric(typeof(DbRepository<,>))
                 .As(typeof(IDbRepository<,>));
-                //.InstancePerRequest();
 
-            builder.RegisterGeneric(typeof(DefaultService<>))
+            builder
+               .RegisterGeneric(typeof(DefaultService<>))
                .As(typeof(IDefaultService<>));
-               //.InstancePerRequest();
 
-            var servicesAssembly = Assembly.GetAssembly(typeof(INomenclatureService));
-            builder.RegisterAssemblyTypes(servicesAssembly).AsImplementedInterfaces();
-
-            //builder.RegisterType<MakesService>()
-                //.As<IMakesService>();
+            Assembly servicesAssembly = Assembly.GetAssembly(typeof(INomenclatureService));
+            builder
+                .RegisterAssemblyTypes(servicesAssembly)
+                .AsImplementedInterfaces();
 
             return builder.Build();
         }
