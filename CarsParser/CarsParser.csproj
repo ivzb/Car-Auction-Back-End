@@ -66,6 +66,7 @@
     <Compile Include="IApplication.cs" />
     <Compile Include="MainClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceContainer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

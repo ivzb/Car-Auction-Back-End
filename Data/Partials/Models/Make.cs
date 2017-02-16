@@ -4,7 +4,7 @@
     using System;
     using System.Collections.Generic;
 
-    public partial class Make : BaseModel<int>
+    public partial class Make : Data.Common.Models.BaseModel<int>
     {
     }
 }

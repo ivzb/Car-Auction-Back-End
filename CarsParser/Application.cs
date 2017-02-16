@@ -12,42 +12,22 @@
 
     public class Application : IApplication
     {
-        private readonly IDefaultService<Make> makesService;
-
-        private Dictionary<string, Make> Makes { get; set; }
 
         private const string carUrl = "https://www.copart.co.uk/public/data/lotdetails/solr/{0}";
         private const string imagesUrl = "https://www.copart.co.uk/public/data/lotdetails/solr/lotImages/{0}";
 
         public Application(IDefaultService<Make> makesService)
         {
-            this.makesService = makesService;
+            this.ServiceContainer = new ServiceContainer();
+            this.ServiceContainer.AddService<Make>(makesService);
         }
+
+        private ServiceContainer ServiceContainer { get; set; }
 
         public void Run()
         {
-            this.Makes = this.makesService.Get().ToDictionary(x => x.Value);
-
-            Make test = this.GetMake("test");
-        }
-
-        private Make GetMake(string key)
-        {
-            Make make;
-            bool makeFound = this.Makes.TryGetValue(key, out make);
-
-            if (!makeFound)
-            {
-                make = new Make
-                {
-                    Value = key
-                };
-
-                this.makesService.Add(make);
-                this.Makes.Add(key, make);
-            }
-
-            return make;
+            Make test = this.ServiceContainer.GetValue<Make>("test");
+            Console.WriteLine(test.Value);
         }
 
         private void FetchCarForLot(int lotNumber)
@@ -62,7 +42,7 @@
                     dynamic carDeserializedResponse = JsonConvert.DeserializeObject(carResponseJSON);
                     dynamic car = carDeserializedResponse.data.lotDetails;
 
-                    Make make = this.GetMake(car.mkn);
+                    //Make make = this.GetMake(car.mkn);
                     string model = car.lm;
                     string category = car.td;
                     string location = car.yn;

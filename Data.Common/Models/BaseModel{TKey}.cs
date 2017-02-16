@@ -8,5 +8,7 @@
     {
         [Key]
         public TKey Id { get; set; }
+
+        public string Value { get; set; }
     }
 }

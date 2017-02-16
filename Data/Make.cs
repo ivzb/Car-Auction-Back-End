@@ -11,8 +11,8 @@ namespace Data
 {
     using System;
     using System.Collections.Generic;
-    
-    public partial class Make
+
+    public partial class Make : Data.Common.Models.BaseModel<int>
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Make()
@@ -20,8 +20,8 @@ namespace Data
             this.Cars = new HashSet<Car>();
         }
     
-        public int Id { get; set; }
-        public string Value { get; set; }
+        //public int Id { get; set; }
+        //public string Value { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Car> Cars { get; set; }
