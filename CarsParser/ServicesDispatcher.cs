@@ -8,31 +8,31 @@
     public class ServicesDispatcher : IServicesDispatcher
     {
         private readonly IDictionary<string, object> services; // object == IDefaultService<BaseModel>
-        private readonly IDictionary<string, object> dictionaries; // object == IDictionary<string, BaseModel>
+        private readonly IDictionary<string, object> entities; // object == IDictionary<string, BaseModel>
 
         public ServicesDispatcher()
         {
             this.services = new Dictionary<string, object>();
-            this.dictionaries = new Dictionary<string, object>();
+            this.entities = new Dictionary<string, object>();
         }
 
         public void InjectService<T>(IDefaultService<T> service)
             where T : BaseModel, new()
         {
-            string key = typeof(T).FullName;
+            string key = this.GetEntityClassName<T>();
 
             this.services.Add(key, service);
             IDictionary<string, T> currentEntities = service.Get().ToDictionary(x => x.Value);
-            this.dictionaries.Add(key, currentEntities);
+            this.entities.Add(key, currentEntities);
         }
 
         public T GetEntity<T>(string entityValue)
             where T : BaseModel, new()
         {
-            string key = typeof(T).FullName;
-            IDictionary<string, T> entities = (IDictionary<string, T>)this.dictionaries[key];
+            string key = this.GetEntityClassName<T>();
+            IDictionary<string, T> entitiesByKey = (IDictionary<string, T>)this.entities[key];
             T model;
-            bool entityFound = ((IDictionary<string, T>)entities).TryGetValue(entityValue, out model);
+            bool entityFound = ((IDictionary<string, T>)entitiesByKey).TryGetValue(entityValue, out model);
 
             if (!entityFound)
             {
@@ -42,10 +42,17 @@
                 };
 
                 ((IDefaultService<T>)this.services[key]).Add(model);
-                ((IDictionary<string, T>)this.dictionaries[key]).Add(entityValue, model);
+                ((IDictionary<string, T>)this.entities[key]).Add(entityValue, model);
             }
 
             return model;
+        }
+
+
+        private string GetEntityClassName<T>()
+            where T : class
+        {
+            return typeof(T).FullName;
         }
     }
 }
