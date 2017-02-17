@@ -6,6 +6,6 @@
     public interface IServicesDispatcher
     {
         void InjectService<T>(IDefaultService<T> service) where T : BaseModel, new();
-        T GetEntity<T>(string key) where T : BaseModel, new();
+        T GetEntity<T>(string entityValue) where T : BaseModel, new();
     }
 }

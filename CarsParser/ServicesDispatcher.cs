@@ -7,8 +7,8 @@
 
     public class ServicesDispatcher : IServicesDispatcher
     {
-        private readonly IDictionary<string, object> services; // IDefaultService<BaseModel>
-        private readonly IDictionary<string, object> dictionaries; // IDictionary<string, BaseModel>
+        private readonly IDictionary<string, object> services; // object == IDefaultService<BaseModel>
+        private readonly IDictionary<string, object> dictionaries; // object == IDictionary<string, BaseModel>
 
         public ServicesDispatcher()
         {
@@ -26,23 +26,23 @@
             this.dictionaries.Add(key, currentEntities);
         }
 
-        public T GetEntity<T>(string key)
+        public T GetEntity<T>(string entityValue)
             where T : BaseModel, new()
         {
-            string dictionaryKey = typeof(T).FullName;
-            IDictionary<string, T> entities = (IDictionary<string, T>)this.dictionaries[dictionaryKey];
+            string key = typeof(T).FullName;
+            IDictionary<string, T> entities = (IDictionary<string, T>)this.dictionaries[key];
             T model;
-            bool entityFound = ((IDictionary<string, T>)entities).TryGetValue(key, out model);
+            bool entityFound = ((IDictionary<string, T>)entities).TryGetValue(entityValue, out model);
 
             if (!entityFound)
             {
                 model = new T
                 {
-                    Value = key
+                    Value = entityValue
                 };
 
-                ((IDefaultService<T>)this.services[dictionaryKey]).Add(model);
-                ((IDictionary<string, T>)this.dictionaries[dictionaryKey]).Add(key, model);
+                ((IDefaultService<T>)this.services[key]).Add(model);
+                ((IDictionary<string, T>)this.dictionaries[key]).Add(entityValue, model);
             }
 
             return model;
