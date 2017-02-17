@@ -64,9 +64,10 @@
     <Compile Include="ContainerConfig.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="IApplication.cs" />
+    <Compile Include="IServicesDispatcher.cs" />
     <Compile Include="MainClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServiceContainer.cs" />
+    <Compile Include="ServicesDispatcher.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

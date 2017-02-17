@@ -18,15 +18,15 @@
 
         public Application(IDefaultService<Make> makesService)
         {
-            this.ServiceContainer = new ServiceContainer();
-            this.ServiceContainer.AddService<Make>(makesService);
+            this.ServicesDispatcher = new ServicesDispatcher();
+            this.ServicesDispatcher.AddService<Make>(makesService);
         }
 
-        private ServiceContainer ServiceContainer { get; set; }
+        private IServicesDispatcher ServicesDispatcher { get; set; }
 
         public void Run()
         {
-            Make test = this.ServiceContainer.GetValue<Make>("test");
+            Make test = this.ServicesDispatcher.GetEntity<Make>("test123");
             Console.WriteLine(test.Value);
         }
 

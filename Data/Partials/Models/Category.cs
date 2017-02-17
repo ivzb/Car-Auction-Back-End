@@ -4,7 +4,7 @@
     using System;
     using System.Collections.Generic;
 
-    public partial class Category : BaseModel<int>
+    public partial class Category : BaseModel
     {
     }
 }

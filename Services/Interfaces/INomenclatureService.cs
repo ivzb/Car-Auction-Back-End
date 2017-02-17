@@ -8,8 +8,8 @@
     public interface INomenclatureService
     {
         IQueryable<T> GetAll<T>()
-            where T : BaseModel<int>;
+            where T : BaseModel;
         IQueryable<T> GetAll<T>(Expression<Func<T, bool>> predicate)
-            where T : BaseModel<int>;
+            where T : BaseModel;
     }
 }

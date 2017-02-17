@@ -4,7 +4,7 @@
     using System;
     using System.Collections.Generic;
 
-    public partial class Fuel : BaseModel<int>
+    public partial class Fuel : BaseModel
     {
     }
 }

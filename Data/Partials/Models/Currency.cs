@@ -4,7 +4,7 @@
     using System;
     using System.Collections.Generic;
 
-    public partial class Currency : BaseModel<int>
+    public partial class Currency : BaseModel
     {
     }
 }

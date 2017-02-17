@@ -50,7 +50,8 @@
   <ItemGroup>
     <Compile Include="DbRepository{T}.cs" />
     <Compile Include="IDbRepository{T}.cs" />
-    <Compile Include="Models\BaseModel{TKey}.cs" />
+    <Compile Include="Models\BaseModel.cs" />
+    <Compile Include="Models\GenericModel{TKey}.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

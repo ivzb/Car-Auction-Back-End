@@ -4,12 +4,12 @@
     using System.Linq;
 
     public interface IDbRepository<T> : IDbRepository<T, int>
-         where T : BaseModel<int>
+         where T : BaseModel
     {
     }
 
     public interface IDbRepository<T, in TKey>
-        where T : BaseModel<TKey>
+        where T : BaseModel
     {
         IQueryable<T> All();
         T GetById(TKey id);

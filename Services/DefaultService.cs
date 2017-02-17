@@ -5,7 +5,7 @@
     using Services.Interfaces;
 
     public class DefaultService<T> : BaseService<T, int>, IDefaultService<T>
-        where T : BaseModel<int>
+        where T : BaseModel
     {
         public DefaultService(IDbRepository<T> repository)
             : base(repository)

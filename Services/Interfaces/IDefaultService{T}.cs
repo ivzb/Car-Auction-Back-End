@@ -3,7 +3,7 @@
     using Data.Common.Models;
 
     public interface IDefaultService<T> : IBaseService<T, int>
-        where T : BaseModel<int>
+        where T : BaseModel
     {
     }
 }

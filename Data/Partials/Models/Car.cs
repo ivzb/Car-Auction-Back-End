@@ -4,7 +4,7 @@
     using System;
     using System.Collections.Generic;
 
-    public partial class Car : BaseModel<int>
+    public partial class Car : BaseModel
     {
     }
 }
