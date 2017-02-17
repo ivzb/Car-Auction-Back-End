@@ -4,7 +4,7 @@
     using System;
     using System.Collections.Generic;
 
-    public partial class Tranmission : BaseModel
+    public partial class Transmission : BaseModel
     {
     }
 }

@@ -5,7 +5,7 @@
 
     public interface IServicesDispatcher
     {
-        void AddService<T>(IDefaultService<T> service) where T : BaseModel, new();
+        void InjectService<T>(IDefaultService<T> service) where T : BaseModel, new();
         T GetEntity<T>(string key) where T : BaseModel, new();
     }
 }

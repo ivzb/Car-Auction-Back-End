@@ -16,10 +16,25 @@
         private const string carUrl = "https://www.copart.co.uk/public/data/lotdetails/solr/{0}";
         private const string imagesUrl = "https://www.copart.co.uk/public/data/lotdetails/solr/lotImages/{0}";
 
-        public Application(IDefaultService<Make> makesService)
-        {
+        public Application(
+            IDefaultService<Make> makesService,
+            IDefaultService<Model> modelService,
+            IDefaultService<Category> categoryService,
+            IDefaultService<Location> locationService,
+            IDefaultService<Currency> currencyService,
+            IDefaultService<Transmission> transmissionService,
+            IDefaultService<Fuel> fuelService,
+            IDefaultService<Color> colorService
+        ) {
             this.ServicesDispatcher = new ServicesDispatcher();
-            this.ServicesDispatcher.AddService<Make>(makesService);
+            this.ServicesDispatcher.InjectService<Make>(makesService);
+            this.ServicesDispatcher.InjectService<Model>(modelService);
+            this.ServicesDispatcher.InjectService<Category>(categoryService);
+            this.ServicesDispatcher.InjectService<Location>(locationService);
+            this.ServicesDispatcher.InjectService<Currency>(currencyService);
+            this.ServicesDispatcher.InjectService<Transmission>(transmissionService);
+            this.ServicesDispatcher.InjectService<Fuel>(fuelService);
+            this.ServicesDispatcher.InjectService<Color>(colorService);
         }
 
         private IServicesDispatcher ServicesDispatcher { get; set; }
@@ -42,14 +57,17 @@
                     dynamic carDeserializedResponse = JsonConvert.DeserializeObject(carResponseJSON);
                     dynamic car = carDeserializedResponse.data.lotDetails;
 
-                    //Make make = this.GetMake(car.mkn);
-                    string model = car.lm;
-                    string category = car.td;
-                    string location = car.yn;
-                    string currency = car.cuc;
-                    string transmission = car.tsmn;
-                    string fuel = car.ftd;
+                    Make make = this.ServicesDispatcher.GetEntity<Make>(car.mkn);
+                    Model model = this.ServicesDispatcher.GetEntity<Model>(car.lm);
+                    Category category = this.ServicesDispatcher.GetEntity<Category>(car.td);
+                    Location location = this.ServicesDispatcher.GetEntity<Location>(car.yn);
+                    Currency currency = this.ServicesDispatcher.GetEntity<Currency>(car.cuc);
+                    Transmission transmission = this.ServicesDispatcher.GetEntity<Transmission>(car.tsmn);
+                    Fuel fuel = this.ServicesDispatcher.GetEntity<Fuel>(car.ftd);
+                    Color color = this.ServicesDispatcher.GetEntity<Color>(car.clr);
 
+                    // todo: inspect if all types here and in the DB are the same
+                    // there should be no differences!
                     //int lotNumber = car.ln;
                     int year = car.lcy;
                     string title = car.ld;
@@ -60,7 +78,6 @@
                     string primaryDamage = car.dd;
                     string secondaryDamage = car.sdd;
                     string bodyStyle = car.bstl;
-                    string color = car.clr;
                     string drive = car.drv;
 
                     DateTime AuctionDate = UnixTimeStampToDateTime((double)car.ad);

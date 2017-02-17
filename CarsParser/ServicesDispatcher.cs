@@ -16,7 +16,7 @@
             this.dictionaries = new Dictionary<string, object>();
         }
 
-        public void AddService<T>(IDefaultService<T> service)
+        public void InjectService<T>(IDefaultService<T> service)
             where T : BaseModel, new()
         {
             string key = typeof(T).FullName;
