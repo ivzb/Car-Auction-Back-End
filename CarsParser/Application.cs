@@ -1,13 +1,10 @@
 ﻿namespace CarsParser
 {
     using Data;
-    using Data.Common.Models;
     using Newtonsoft.Json;
     using Services.Interfaces;
     using System;
-    using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Net;
     using System.Text.RegularExpressions;
 
@@ -46,11 +43,17 @@
 
         public void Run()
         {
-            this.FetchCarForLot(18866507);
+            try
+            {
+                this.FetchCarForLot(18866507);
+            }
+            catch (Exception e)
+            {
+                // todo: save failed lots in db and examine them later
+            }
         }
 
         private void FetchCarForLot(int lot)
-
         {
             WebRequest carRequest = WebRequest.Create(string.Format(carUrl, lot));
             using (WebResponse carResponse = carRequest.GetResponse())
@@ -110,13 +113,13 @@
                     this.carsService.Add(car);
 
                     // fetch images
-                    string carJSON = JsonConvert.SerializeObject(car);
-                    FetchImagesForLot(lot, carJSON);
+                    string carJSON = JsonConvert.SerializeObject(lotDetails);
+                    this.FetchImagesForLot(lot, carJSON);
                 }
             }
         }
 
-        private static void FetchImagesForLot(int lotNumber, string carJSON)
+        private void FetchImagesForLot(int lotNumber, string carJSON)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(string.Format(imagesUrl, lotNumber));
             request.ContentType = "application/json";
@@ -137,6 +140,8 @@
                     string responseJSON = reader.ReadToEnd();
                     dynamic deserializedResponse = JsonConvert.DeserializeObject(responseJSON);
                     dynamic images = deserializedResponse.data.imagesList.FULL_IMAGE;
+
+                    // todo: attach lot images in db
                 }
             }
         }
