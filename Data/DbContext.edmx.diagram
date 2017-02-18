@@ -4,28 +4,28 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="35ea28f85c51445985aa2dd8dc53b8c9" Name="Diagram1">
-        <EntityTypeShape EntityType="daniautoModel.Bid" Width="1.5" PointX="5.25" PointY="1.875" IsExpanded="true" />
+      <Diagram DiagramId="2247d2d3fc5c477bbc361963081920b7" Name="Diagram1">
+        <EntityTypeShape EntityType="daniautoModel.Bid" Width="1.5" PointX="5.25" PointY="2.125" IsExpanded="true" />
         <EntityTypeShape EntityType="daniautoModel.Car" Width="1.5" PointX="3" PointY="1.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="daniautoModel.Category" Width="1.5" PointX="0.75" PointY="3.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="daniautoModel.Color" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="daniautoModel.Currency" Width="1.5" PointX="2.75" PointY="7.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="daniautoModel.Fuel" Width="1.5" PointX="0.75" PointY="6.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="daniautoModel.Image" Width="1.5" PointX="5.25" PointY="4.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="daniautoModel.Location" Width="1.5" PointX="0.75" PointY="8.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="daniautoModel.Make" Width="1.5" PointX="0.75" PointY="10.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="daniautoModel.Model" Width="1.5" PointX="0.75" PointY="12.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="daniautoModel.Transmission" Width="1.5" PointX="0.75" PointY="14.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="daniautoModel.Category" Width="1.5" PointX="0.75" PointY="3.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="daniautoModel.Color" Width="1.5" PointX="0.75" PointY="6.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="daniautoModel.Currency" Width="1.5" PointX="0.75" PointY="8.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="daniautoModel.Fuel" Width="1.5" PointX="0.75" PointY="10.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="daniautoModel.Image" Width="1.5" PointX="5.25" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="daniautoModel.Location" Width="1.5" PointX="0.75" PointY="12.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="daniautoModel.Make" Width="1.5" PointX="0.75" PointY="15" IsExpanded="true" />
+        <EntityTypeShape EntityType="daniautoModel.Model" Width="1.5" PointX="0.75" PointY="17.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="daniautoModel.Transmission" Width="1.5" PointX="0.75" PointY="19.375" IsExpanded="true" />
         <AssociationConnector Association="daniautoModel.FK_Bids_Cars" ManuallyRouted="false" />
         <AssociationConnector Association="daniautoModel.FK_Cars_Categories" ManuallyRouted="false" />
+        <AssociationConnector Association="daniautoModel.FK_Cars_Colors" ManuallyRouted="false" />
+        <AssociationConnector Association="daniautoModel.FK_Cars_Currencies" ManuallyRouted="false" />
         <AssociationConnector Association="daniautoModel.FK_Cars_Fuels" ManuallyRouted="false" />
         <AssociationConnector Association="daniautoModel.FK_Cars_Locations" ManuallyRouted="false" />
         <AssociationConnector Association="daniautoModel.FK_Cars_Makes" ManuallyRouted="false" />
         <AssociationConnector Association="daniautoModel.FK_Cars_Models" ManuallyRouted="false" />
         <AssociationConnector Association="daniautoModel.FK_Cars_Transmissions" ManuallyRouted="false" />
         <AssociationConnector Association="daniautoModel.FK_Images_Cars" ManuallyRouted="false" />
-        <AssociationConnector Association="daniautoModel.FK_Cars_Colors" />
-        <AssociationConnector Association="daniautoModel.FK_Cars_Currencies" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

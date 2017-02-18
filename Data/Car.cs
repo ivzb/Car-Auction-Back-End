@@ -35,7 +35,7 @@ namespace Data
         public string Title { get; set; }
         public string VIN { get; set; }
         public int EstimateValue { get; set; }
-        public string Odometer { get; set; }
+        public int Odometer { get; set; }
         public int Engine { get; set; }
         public string PrimaryDamage { get; set; }
         public string SecondaryDamage { get; set; }
@@ -46,6 +46,8 @@ namespace Data
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Bid> Bids { get; set; }
         public virtual Category Category { get; set; }
+        public virtual Color Color { get; set; }
+        public virtual Currency Currency { get; set; }
         public virtual Fuel Fuel { get; set; }
         public virtual Location Location { get; set; }
         public virtual Make Make { get; set; }
@@ -53,7 +55,5 @@ namespace Data
         public virtual Transmission Transmission { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Image> Images { get; set; }
-        public virtual Color Color { get; set; }
-        public virtual Currency Currency { get; set; }
     }
 }

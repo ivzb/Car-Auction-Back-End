@@ -19,7 +19,7 @@
                 .As<IApplication>();
 
             builder
-                .Register(x => new daniautoEntities())
+                .Register(x => new Entities())
                 .As<DbContext>();
 
             builder

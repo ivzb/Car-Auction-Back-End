@@ -9,45 +9,50 @@
     using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Text.RegularExpressions;
 
     public class Application : IApplication
     {
-
         private const string carUrl = "https://www.copart.co.uk/public/data/lotdetails/solr/{0}";
         private const string imagesUrl = "https://www.copart.co.uk/public/data/lotdetails/solr/lotImages/{0}";
 
+        private readonly IDefaultService<Car> carsService;
+
         public Application(
             IDefaultService<Make> makesService,
-            IDefaultService<Model> modelService,
-            IDefaultService<Category> categoryService,
-            IDefaultService<Location> locationService,
-            IDefaultService<Currency> currencyService,
-            IDefaultService<Transmission> transmissionService,
-            IDefaultService<Fuel> fuelService,
-            IDefaultService<Color> colorService
+            IDefaultService<Model> modelsService,
+            IDefaultService<Category> categoriesService,
+            IDefaultService<Location> locationsService,
+            IDefaultService<Currency> currenciesService,
+            IDefaultService<Transmission> transmissionsService,
+            IDefaultService<Fuel> fuelsService,
+            IDefaultService<Color> colorsService,
+            IDefaultService<Car> carsService
         ) {
             this.ServicesDispatcher = new ServicesDispatcher();
             this.ServicesDispatcher.InjectService<Make>(makesService);
-            this.ServicesDispatcher.InjectService<Model>(modelService);
-            this.ServicesDispatcher.InjectService<Category>(categoryService);
-            this.ServicesDispatcher.InjectService<Location>(locationService);
-            this.ServicesDispatcher.InjectService<Currency>(currencyService);
-            this.ServicesDispatcher.InjectService<Transmission>(transmissionService);
-            this.ServicesDispatcher.InjectService<Fuel>(fuelService);
-            this.ServicesDispatcher.InjectService<Color>(colorService);
+            this.ServicesDispatcher.InjectService<Model>(modelsService);
+            this.ServicesDispatcher.InjectService<Category>(categoriesService);
+            this.ServicesDispatcher.InjectService<Location>(locationsService);
+            this.ServicesDispatcher.InjectService<Currency>(currenciesService);
+            this.ServicesDispatcher.InjectService<Transmission>(transmissionsService);
+            this.ServicesDispatcher.InjectService<Fuel>(fuelsService);
+            this.ServicesDispatcher.InjectService<Color>(colorsService);
+
+            this.carsService = carsService;
         }
 
         private IServicesDispatcher ServicesDispatcher { get; set; }
 
         public void Run()
         {
-            Make test = this.ServicesDispatcher.GetEntity<Make>("test123");
-            Console.WriteLine(test.Value);
+            this.FetchCarForLot(18866507);
         }
 
-        private void FetchCarForLot(int lotNumber)
+        private void FetchCarForLot(int lot)
+
         {
-            WebRequest carRequest = WebRequest.Create(string.Format(carUrl, lotNumber));
+            WebRequest carRequest = WebRequest.Create(string.Format(carUrl, lot));
             using (WebResponse carResponse = carRequest.GetResponse())
             {
                 Stream carDataStream = carResponse.GetResponseStream();
@@ -55,36 +60,58 @@
                 {
                     string carResponseJSON = carReader.ReadToEnd();
                     dynamic carDeserializedResponse = JsonConvert.DeserializeObject(carResponseJSON);
-                    dynamic car = carDeserializedResponse.data.lotDetails;
+                    dynamic lotDetails = carDeserializedResponse.data.lotDetails;
 
-                    Make make = this.ServicesDispatcher.GetEntity<Make>(car.mkn);
-                    Model model = this.ServicesDispatcher.GetEntity<Model>(car.lm);
-                    Category category = this.ServicesDispatcher.GetEntity<Category>(car.td);
-                    Location location = this.ServicesDispatcher.GetEntity<Location>(car.yn);
-                    Currency currency = this.ServicesDispatcher.GetEntity<Currency>(car.cuc);
-                    Transmission transmission = this.ServicesDispatcher.GetEntity<Transmission>(car.tsmn);
-                    Fuel fuel = this.ServicesDispatcher.GetEntity<Fuel>(car.ftd);
-                    Color color = this.ServicesDispatcher.GetEntity<Color>(car.clr);
+                    Make make = this.ServicesDispatcher.GetEntity<Make>(lotDetails.mkn.ToString());
+                    Model model = this.ServicesDispatcher.GetEntity<Model>(lotDetails.lm.ToString());
+                    Category category = this.ServicesDispatcher.GetEntity<Category>(lotDetails.td.ToString());
+                    Location location = this.ServicesDispatcher.GetEntity<Location>(lotDetails.yn.ToString());
+                    Currency currency = this.ServicesDispatcher.GetEntity<Currency>(lotDetails.cuc.ToString());
+                    Transmission transmission = this.ServicesDispatcher.GetEntity<Transmission>(lotDetails.tsmn.ToString());
+                    Fuel fuel = this.ServicesDispatcher.GetEntity<Fuel>(lotDetails.ftd.ToString());
+                    Color color = this.ServicesDispatcher.GetEntity<Color>(lotDetails.clr.ToString());
 
-                    // todo: inspect if all types here and in the DB are the same
-                    // there should be no differences!
-                    //int lotNumber = car.ln;
-                    int year = car.lcy;
-                    string title = car.ld;
-                    string vin = car.fv;
-                    int estimateValue = car.la;
-                    int odometer = car.orr;
-                    string engine = car.egn;
-                    string primaryDamage = car.dd;
-                    string secondaryDamage = car.sdd;
-                    string bodyStyle = car.bstl;
-                    string drive = car.drv;
+                    int year = lotDetails.lcy;
+                    string title = lotDetails.ld;
+                    string vin = lotDetails.fv;
+                    int estimateValue = lotDetails.la;
+                    int odometer = lotDetails.orr;
+                    int engine = int.Parse(Regex.Match(lotDetails.egn.ToString(), @"\d+").Value);
+                    string primaryDamage = lotDetails.dd;
+                    string secondaryDamage = lotDetails.sdd;
+                    string bodyStyle = lotDetails.bstl;
+                    string drive = lotDetails.drv;
+                    DateTime auctionOn = UnixTimeStampToDateTime((double)lotDetails.ad);
 
-                    DateTime AuctionDate = UnixTimeStampToDateTime((double)car.ad);
+                    Car car = new Car
+                    {
+                        MakeId = make.Id,
+                        ModelId = model.Id,
+                        CategoryId = category.Id,
+                        LocationId = location.Id,
+                        CurrencyId = currency.Id,
+                        TransmissionId = transmission.Id,
+                        FuelId = fuel.Id,
+                        ColorId = color.Id,
+                        Lot = lot,
+                        Year = year,
+                        Title = title,
+                        VIN = vin,
+                        EstimateValue = estimateValue,
+                        Odometer = odometer,
+                        Engine = engine,
+                        PrimaryDamage = primaryDamage,
+                        SecondaryDamage = secondaryDamage,
+                        BodyStyle = bodyStyle,
+                        Drive = drive,
+                        AuctionOn = auctionOn
+                    };
+
+                    this.carsService.Add(car);
 
                     // fetch images
                     string carJSON = JsonConvert.SerializeObject(car);
-                    FetchImagesForLot(lotNumber, carJSON);
+                    FetchImagesForLot(lot, carJSON);
                 }
             }
         }

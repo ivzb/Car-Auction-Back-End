@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="daniautoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="daniautoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Bids">
           <Key>
             <PropertyRef Name="Id" />
@@ -32,7 +32,7 @@
           <Property Name="Title" Type="nvarchar(max)" Nullable="false" />
           <Property Name="VIN" Type="nvarchar(max)" Nullable="false" />
           <Property Name="EstimateValue" Type="int" Nullable="false" />
-          <Property Name="Odometer" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Odometer" Type="int" Nullable="false" />
           <Property Name="Engine" Type="int" Nullable="false" />
           <Property Name="PrimaryDamage" Type="nvarchar(max)" Nullable="false" />
           <Property Name="SecondaryDamage" Type="nvarchar(max)" Nullable="false" />
@@ -277,7 +277,8 @@
             <End Role="Images" EntitySet="Images" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="daniautoModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -309,7 +310,7 @@
           <Property Name="Title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="VIN" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="EstimateValue" Type="Int32" Nullable="false" />
-          <Property Name="Odometer" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Odometer" Type="Int32" Nullable="false" />
           <Property Name="Engine" Type="Int32" Nullable="false" />
           <Property Name="PrimaryDamage" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="SecondaryDamage" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
@@ -318,14 +319,14 @@
           <Property Name="AuctionOn" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Bids" Relationship="Self.FK_Bids_Cars" FromRole="Cars" ToRole="Bids" />
           <NavigationProperty Name="Category" Relationship="Self.FK_Cars_Categories" FromRole="Cars" ToRole="Categories" />
+          <NavigationProperty Name="Color" Relationship="Self.FK_Cars_Colors" FromRole="Cars" ToRole="Colors" />
+          <NavigationProperty Name="Currency" Relationship="Self.FK_Cars_Currencies" FromRole="Cars" ToRole="Currencies" />
           <NavigationProperty Name="Fuel" Relationship="Self.FK_Cars_Fuels" FromRole="Cars" ToRole="Fuels" />
           <NavigationProperty Name="Location" Relationship="Self.FK_Cars_Locations" FromRole="Cars" ToRole="Locations" />
           <NavigationProperty Name="Make" Relationship="Self.FK_Cars_Makes" FromRole="Cars" ToRole="Makes" />
           <NavigationProperty Name="Model" Relationship="Self.FK_Cars_Models" FromRole="Cars" ToRole="Models" />
           <NavigationProperty Name="Transmission" Relationship="Self.FK_Cars_Transmissions" FromRole="Cars" ToRole="Transmissions" />
           <NavigationProperty Name="Images" Relationship="Self.FK_Images_Cars" FromRole="Cars" ToRole="Images" />
-          <NavigationProperty Name="Color" Relationship="daniautoModel.FK_Cars_Colors" FromRole="Car" ToRole="Color" />
-          <NavigationProperty Name="Currency" Relationship="daniautoModel.FK_Cars_Currencies" FromRole="Car" ToRole="Currency" />
         </EntityType>
         <EntityType Name="Category">
           <Key>
@@ -341,7 +342,7 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Cars" Relationship="daniautoModel.FK_Cars_Colors" FromRole="Color" ToRole="Car" />
+          <NavigationProperty Name="Cars" Relationship="Self.FK_Cars_Colors" FromRole="Colors" ToRole="Cars" />
         </EntityType>
         <EntityType Name="Currency">
           <Key>
@@ -349,7 +350,7 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Cars" Relationship="daniautoModel.FK_Cars_Currencies" FromRole="Currency" ToRole="Car" />
+          <NavigationProperty Name="Cars" Relationship="Self.FK_Cars_Currencies" FromRole="Currencies" ToRole="Cars" />
         </EntityType>
         <EntityType Name="Fuel">
           <Key>
@@ -421,6 +422,30 @@
             </Principal>
             <Dependent Role="Cars">
               <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Cars_Colors">
+          <End Role="Colors" Type="Self.Color" Multiplicity="1" />
+          <End Role="Cars" Type="Self.Car" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Colors">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Cars">
+              <PropertyRef Name="ColorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Cars_Currencies">
+          <End Role="Currencies" Type="Self.Currency" Multiplicity="1" />
+          <End Role="Cars" Type="Self.Car" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currencies">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Cars">
+              <PropertyRef Name="CurrencyId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -496,7 +521,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="daniautoEntities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Bids" EntityType="Self.Bid" />
           <EntitySet Name="Cars" EntityType="Self.Car" />
           <EntitySet Name="Categories" EntityType="Self.Category" />
@@ -514,6 +539,14 @@
           </AssociationSet>
           <AssociationSet Name="FK_Cars_Categories" Association="Self.FK_Cars_Categories">
             <End Role="Categories" EntitySet="Categories" />
+            <End Role="Cars" EntitySet="Cars" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Cars_Colors" Association="Self.FK_Cars_Colors">
+            <End Role="Colors" EntitySet="Colors" />
+            <End Role="Cars" EntitySet="Cars" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Cars_Currencies" Association="Self.FK_Cars_Currencies">
+            <End Role="Currencies" EntitySet="Currencies" />
             <End Role="Cars" EntitySet="Cars" />
           </AssociationSet>
           <AssociationSet Name="FK_Cars_Fuels" Association="Self.FK_Cars_Fuels">
@@ -540,45 +573,13 @@
             <End Role="Cars" EntitySet="Cars" />
             <End Role="Images" EntitySet="Images" />
           </AssociationSet>
-          <AssociationSet Name="FK_Cars_Colors" Association="daniautoModel.FK_Cars_Colors">
-            <End Role="Color" EntitySet="Colors" />
-            <End Role="Car" EntitySet="Cars" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Cars_Currencies" Association="daniautoModel.FK_Cars_Currencies">
-            <End Role="Currency" EntitySet="Currencies" />
-            <End Role="Car" EntitySet="Cars" />
-          </AssociationSet>
         </EntityContainer>
-        <Association Name="FK_Cars_Colors">
-          <End Type="daniautoModel.Color" Role="Color" Multiplicity="1" />
-          <End Type="daniautoModel.Car" Role="Car" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Color">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Car">
-              <PropertyRef Name="ColorId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Cars_Currencies">
-          <End Type="daniautoModel.Currency" Role="Currency" Multiplicity="1" />
-          <End Type="daniautoModel.Car" Role="Car" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Currency">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Car">
-              <PropertyRef Name="CurrencyId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="daniautoModelStoreContainer" CdmEntityContainer="daniautoEntities">
+        <EntityContainerMapping StorageEntityContainer="daniautoModelStoreContainer" CdmEntityContainer="Entities">
           <EntitySetMapping Name="Bids">
             <EntityTypeMapping TypeName="daniautoModel.Bid">
               <MappingFragment StoreEntitySet="Bids">

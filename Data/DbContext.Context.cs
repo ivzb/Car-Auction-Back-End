@@ -13,10 +13,10 @@ namespace Data
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class daniautoEntities : DbContext
+    public partial class Entities : DbContext
     {
-        public daniautoEntities()
-            : base("name=daniautoEntities")
+        public Entities()
+            : base("name=Entities")
         {
         }
     
