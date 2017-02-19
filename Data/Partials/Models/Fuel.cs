@@ -4,7 +4,11 @@
     using System;
     using System.Collections.Generic;
 
-    public partial class Fuel : BaseModel
+    public partial class Fuel : ValueModel
     {
+        public Fuel(string value)
+            : base(value)
+        {
+        }
     }
 }

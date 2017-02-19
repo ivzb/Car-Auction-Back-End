@@ -4,7 +4,11 @@
     using System;
     using System.Collections.Generic;
 
-    public partial class Location : BaseModel
+    public partial class Location : ValueModel
     {
+        public Location(string value)
+            : base(value)
+        {
+        }
     }
 }

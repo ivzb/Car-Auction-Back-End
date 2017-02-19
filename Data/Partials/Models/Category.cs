@@ -4,7 +4,11 @@
     using System;
     using System.Collections.Generic;
 
-    public partial class Category : BaseModel
+    public partial class Category : ValueModel
     {
+        public Category(string value)
+            : base(value)
+        {
+        }
     }
 }

@@ -21,7 +21,6 @@ namespace Data
             this.Images = new HashSet<Image>();
         }
     
-        public int Id { get; set; }
         public int MakeId { get; set; }
         public int ModelId { get; set; }
         public int CategoryId { get; set; }
@@ -30,7 +29,6 @@ namespace Data
         public int TransmissionId { get; set; }
         public int FuelId { get; set; }
         public int ColorId { get; set; }
-        public int Lot { get; set; }
         public int Year { get; set; }
         public string Title { get; set; }
         public string VIN { get; set; }

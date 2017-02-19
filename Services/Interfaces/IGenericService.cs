@@ -5,11 +5,11 @@
     using System.Linq;
     using System.Linq.Expressions;
 
-    public interface INomenclatureService
+    public interface IGenericService
     {
         IQueryable<T> GetAll<T>()
-            where T : BaseModel;
+            where T : GenericModel<int>;
         IQueryable<T> GetAll<T>(Expression<Func<T, bool>> predicate)
-            where T : BaseModel;
+            where T : GenericModel<int>;
     }
 }

@@ -2,6 +2,7 @@
 {
     using Data.Common.Models;
     using Services.Interfaces;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -16,40 +17,55 @@
             this.entities = new Dictionary<string, object>();
         }
 
-        public void InjectService<T>(IDefaultService<T> service)
-            where T : BaseModel, new()
+        public IServicesDispatcher InjectService<T>(IBaseService<T> service)
+            where T : GenericModel<int>, new()
         {
-            string key = this.GetEntityClassName<T>();
-
+            string key = this.GetClassName<T>();
             this.services.Add(key, service);
-            IDictionary<string, T> currentEntities = service.Get().ToDictionary(x => x.Value);
-            this.entities.Add(key, currentEntities);
+            this.entities.Add(key, service.GetEntitiesAsDictionary());
+
+            return this;
         }
 
-        public T GetEntity<T>(string entityValue)
-            where T : BaseModel, new()
+        public T GetEntity<T>(string key)
+            where T : GenericModel<int>, new()
         {
-            string key = this.GetEntityClassName<T>();
-            IDictionary<string, T> entitiesByKey = (IDictionary<string, T>)this.entities[key];
-            T model;
-            bool entityFound = ((IDictionary<string, T>)entitiesByKey).TryGetValue(entityValue, out model);
+            string serviceKey = this.GetClassName<T>();
+            IDictionary<string, T> serviceEntities = (IDictionary<string, T>)this.entities[serviceKey];
+            T entity;
+            bool entityExists = serviceEntities.TryGetValue(key, out entity);
 
-            if (!entityFound)
+            if (!entityExists)
             {
-                model = new T
-                {
-                    Value = entityValue
-                };
-
-                ((IDefaultService<T>)this.services[key]).Add(model);
-                ((IDictionary<string, T>)this.entities[key]).Add(entityValue, model);
+                entity = (T)Activator.CreateInstance(typeof(T), key);
+                this.AddEntity<T>(entity, key);
             }
 
-            return model;
+            return entity;
         }
 
+        public bool EntityExists<T>(string key)
+            where T : GenericModel<int>, new()
+        {
+            string serviceKey = this.GetClassName<T>();
+            IDictionary<string, T> serviceEntities = (IDictionary<string, T>)this.entities[serviceKey];
+            T entity;
+            bool entityExists = serviceEntities.TryGetValue(key, out entity);
 
-        private string GetEntityClassName<T>()
+            return entityExists;
+        }
+
+        public T AddEntity<T>(T entity, string entityKey)
+            where T : GenericModel<int>, new()
+        {
+            string key = this.GetClassName<T>();
+            ((IBaseService<T>)this.services[key]).Add(entity);
+            ((IDictionary<string, T>)this.entities[key]).Add(entityKey, entity);
+
+            return entity;
+        }
+
+        private string GetClassName<T>()
             where T : class
         {
             return typeof(T).FullName;

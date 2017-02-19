@@ -4,28 +4,28 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="2247d2d3fc5c477bbc361963081920b7" Name="Diagram1">
-        <EntityTypeShape EntityType="daniautoModel.Bid" Width="1.5" PointX="5.25" PointY="2.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="daniautoModel.Car" Width="1.5" PointX="3" PointY="1.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="daniautoModel.Category" Width="1.5" PointX="0.75" PointY="3.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="daniautoModel.Color" Width="1.5" PointX="0.75" PointY="6.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="daniautoModel.Currency" Width="1.5" PointX="0.75" PointY="8.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="daniautoModel.Fuel" Width="1.5" PointX="0.75" PointY="10.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="daniautoModel.Image" Width="1.5" PointX="5.25" PointY="4.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="daniautoModel.Location" Width="1.5" PointX="0.75" PointY="12.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="daniautoModel.Make" Width="1.5" PointX="0.75" PointY="15" IsExpanded="true" />
-        <EntityTypeShape EntityType="daniautoModel.Model" Width="1.5" PointX="0.75" PointY="17.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="daniautoModel.Transmission" Width="1.5" PointX="0.75" PointY="19.375" IsExpanded="true" />
-        <AssociationConnector Association="daniautoModel.FK_Bids_Cars" ManuallyRouted="false" />
-        <AssociationConnector Association="daniautoModel.FK_Cars_Categories" ManuallyRouted="false" />
-        <AssociationConnector Association="daniautoModel.FK_Cars_Colors" ManuallyRouted="false" />
-        <AssociationConnector Association="daniautoModel.FK_Cars_Currencies" ManuallyRouted="false" />
-        <AssociationConnector Association="daniautoModel.FK_Cars_Fuels" ManuallyRouted="false" />
-        <AssociationConnector Association="daniautoModel.FK_Cars_Locations" ManuallyRouted="false" />
-        <AssociationConnector Association="daniautoModel.FK_Cars_Makes" ManuallyRouted="false" />
-        <AssociationConnector Association="daniautoModel.FK_Cars_Models" ManuallyRouted="false" />
-        <AssociationConnector Association="daniautoModel.FK_Cars_Transmissions" ManuallyRouted="false" />
-        <AssociationConnector Association="daniautoModel.FK_Images_Cars" ManuallyRouted="false" />
+      <Diagram DiagramId="71eb56ecc5d04e1e84f6e6374431ff21" Name="Diagram1" ZoomLevel="56">
+        <EntityTypeShape EntityType="CarsEntities.Bid" Width="1.5" PointX="5.25" PointY="2.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="CarsEntities.Car" Width="1.5" PointX="3" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="CarsEntities.Category" Width="1.5" PointX="0.75" PointY="3.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="CarsEntities.Color" Width="1.5" PointX="0.75" PointY="6.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="CarsEntities.Currency" Width="1.5" PointX="0.75" PointY="8.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CarsEntities.Fuel" Width="1.5" PointX="0.75" PointY="10.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="CarsEntities.Image" Width="1.5" PointX="5.25" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="CarsEntities.Location" Width="1.5" PointX="0.75" PointY="12.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="CarsEntities.Make" Width="1.5" PointX="0.75" PointY="15" IsExpanded="true" />
+        <EntityTypeShape EntityType="CarsEntities.Model" Width="1.5" PointX="0.75" PointY="17.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="CarsEntities.Transmission" Width="1.5" PointX="0.75" PointY="19.375" IsExpanded="true" />
+        <AssociationConnector Association="CarsEntities.FK_Bids_Cars" ManuallyRouted="false" />
+        <AssociationConnector Association="CarsEntities.FK_Cars_Categories" ManuallyRouted="false" />
+        <AssociationConnector Association="CarsEntities.FK_Cars_Colors" ManuallyRouted="false" />
+        <AssociationConnector Association="CarsEntities.FK_Cars_Currencies" ManuallyRouted="false" />
+        <AssociationConnector Association="CarsEntities.FK_Cars_Fuels" ManuallyRouted="false" />
+        <AssociationConnector Association="CarsEntities.FK_Cars_Locations" ManuallyRouted="false" />
+        <AssociationConnector Association="CarsEntities.FK_Cars_Makes" ManuallyRouted="false" />
+        <AssociationConnector Association="CarsEntities.FK_Cars_Models" ManuallyRouted="false" />
+        <AssociationConnector Association="CarsEntities.FK_Cars_Transmissions" ManuallyRouted="false" />
+        <AssociationConnector Association="CarsEntities.FK_Images_Cars" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

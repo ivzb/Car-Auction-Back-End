@@ -4,7 +4,7 @@
     using System;
     using System.Collections.Generic;
 
-    public partial class Bid : BaseModel
+    public partial class Bid : ValueModel
     {
     }
 }

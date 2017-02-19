@@ -11,7 +11,7 @@
     /// <typeparam name="T">Type of the model, which the service operates</typeparam>
     /// <typeparam name="K">Key of the model, which the service operates</typeparam>
     public abstract class BaseService<T, K> : IBaseService<T, K>
-        where T : BaseModel
+        where T : GenericModel<int>
         where K : struct
     {
         protected IDbRepository<T, K> repository;

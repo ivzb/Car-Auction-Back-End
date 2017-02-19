@@ -40,13 +40,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseService{T, K}.cs" />
-    <Compile Include="DefaultService.cs" />
+    <Compile Include="BaseService{T}.cs" />
+    <Compile Include="GenericService.cs" />
     <Compile Include="Interfaces\IBaseService{T, K}.cs" />
-    <Compile Include="Interfaces\IDefaultService{T}.cs" />
-    <Compile Include="Interfaces\IMakesService.cs" />
-    <Compile Include="Interfaces\INomenclatureService.cs" />
-    <Compile Include="MakesService.cs" />
+    <Compile Include="Interfaces\IBaseService{T}.cs" />
+    <Compile Include="Interfaces\IGenericService.cs" />
+    <Compile Include="Interfaces\ILotsService{T}.cs" />
+    <Compile Include="Interfaces\IUrlsService{T}.cs" />
+    <Compile Include="Interfaces\ITitlesService{T}.cs" />
+    <Compile Include="Interfaces\IValuesService{T}.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="LotsService{T}.cs" />
+    <Compile Include="UrlsService{T}.cs" />
+    <Compile Include="TitlesService{T}.cs" />
+    <Compile Include="ValuesService{T}.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Data.Common\Data.Common.csproj">

@@ -13,48 +13,57 @@
         private const string carUrl = "https://www.copart.co.uk/public/data/lotdetails/solr/{0}";
         private const string imagesUrl = "https://www.copart.co.uk/public/data/lotdetails/solr/lotImages/{0}";
 
-        private readonly IDefaultService<Car> carsService;
-
         public Application(
-            IDefaultService<Make> makesService,
-            IDefaultService<Model> modelsService,
-            IDefaultService<Category> categoriesService,
-            IDefaultService<Location> locationsService,
-            IDefaultService<Currency> currenciesService,
-            IDefaultService<Transmission> transmissionsService,
-            IDefaultService<Fuel> fuelsService,
-            IDefaultService<Color> colorsService,
-            IDefaultService<Car> carsService
+            IValuesService<Make> makesService,
+            IValuesService<Model> modelsService,
+            IValuesService<Category> categoriesService,
+            IValuesService<Location> locationsService,
+            IValuesService<Currency> currenciesService,
+            IValuesService<Transmission> transmissionsService,
+            IValuesService<Fuel> fuelsService,
+            IValuesService<Color> colorsService,
+            ILotsService<Car> carsService,
+            IUrlsService<Image> imagesService
         ) {
-            this.ServicesDispatcher = new ServicesDispatcher();
-            this.ServicesDispatcher.InjectService<Make>(makesService);
-            this.ServicesDispatcher.InjectService<Model>(modelsService);
-            this.ServicesDispatcher.InjectService<Category>(categoriesService);
-            this.ServicesDispatcher.InjectService<Location>(locationsService);
-            this.ServicesDispatcher.InjectService<Currency>(currenciesService);
-            this.ServicesDispatcher.InjectService<Transmission>(transmissionsService);
-            this.ServicesDispatcher.InjectService<Fuel>(fuelsService);
-            this.ServicesDispatcher.InjectService<Color>(colorsService);
-
-            this.carsService = carsService;
+            this.ServicesDispatcher = new ServicesDispatcher()
+                .InjectService<Make>(makesService)
+                .InjectService<Model>(modelsService)
+                .InjectService<Category>(categoriesService)
+                .InjectService<Location>(locationsService)
+                .InjectService<Currency>(currenciesService)
+                .InjectService<Transmission>(transmissionsService)
+                .InjectService<Fuel>(fuelsService)
+                .InjectService<Color>(colorsService)
+                .InjectService<Car>(carsService)
+                .InjectService<Image>(imagesService);
         }
 
         private IServicesDispatcher ServicesDispatcher { get; set; }
 
         public void Run()
         {
+#if DEBUG
+            this.FetchCarForLot("19410837");
+#elif RELEASE
             try
             {
-                this.FetchCarForLot(18866507);
+                this.FetchCarForLot("19410837");
             }
             catch (Exception e)
             {
+                Console.WriteLine(e.Message);
                 // todo: save failed lots in db and examine them later
             }
+#endif
         }
 
-        private void FetchCarForLot(int lot)
+        private void FetchCarForLot(string lot)
         {
+            if (this.ServicesDispatcher.EntityExists<Car>(lot))
+            {
+                throw new ArgumentException(string.Format("Car with lot #{0} already exists.", lot));
+            }
+            
             WebRequest carRequest = WebRequest.Create(string.Format(carUrl, lot));
             using (WebResponse carResponse = carRequest.GetResponse())
             {
@@ -110,16 +119,16 @@
                         AuctionOn = auctionOn
                     };
 
-                    this.carsService.Add(car);
+                    this.ServicesDispatcher.AddEntity(car, title);
 
                     // fetch images
                     string carJSON = JsonConvert.SerializeObject(lotDetails);
-                    this.FetchImagesForLot(lot, carJSON);
+                    this.FetchImagesForLot(lot, carJSON, car.Id);
                 }
             }
         }
 
-        private void FetchImagesForLot(int lotNumber, string carJSON)
+        private void FetchImagesForLot(string lotNumber, string carJSON, int carId)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(string.Format(imagesUrl, lotNumber));
             request.ContentType = "application/json";
@@ -141,7 +150,18 @@
                     dynamic deserializedResponse = JsonConvert.DeserializeObject(responseJSON);
                     dynamic images = deserializedResponse.data.imagesList.FULL_IMAGE;
 
-                    // todo: attach lot images in db
+                    foreach(dynamic imageJSON in images)
+                    {
+                        string url = imageJSON.url.ToString();
+
+                        Image image = new Image
+                        {
+                            Url = url,
+                            CarId = carId
+                        };
+
+                        this.ServicesDispatcher.AddEntity<Image>(image, url);
+                    }
                 }
             }
         }

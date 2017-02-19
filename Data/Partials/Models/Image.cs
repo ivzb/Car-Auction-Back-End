@@ -4,7 +4,16 @@
     using System;
     using System.Collections.Generic;
 
-    public partial class Image : BaseModel
+    public partial class Image : UrlModel
     {
+        public Image()
+            : base()
+        {
+        }
+
+        public Image(string url)
+            : base(url)
+        {
+        }
     }
 }

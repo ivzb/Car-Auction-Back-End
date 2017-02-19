@@ -6,7 +6,7 @@
     using System.Linq;
 
     public class DbRepository<T> : DbRepository<T, int>, IDbRepository<T>
-       where T : BaseModel
+       where T : GenericModel<int>
     {
         public DbRepository(DbContext context)
             : base(context)
@@ -15,7 +15,7 @@
     }
 
     public class DbRepository<T, K> : IDbRepository<T, K>
-        where T : BaseModel
+        where T : GenericModel<int>
         where K : struct
     {
         private IDbSet<T> DbSet { get; set; }

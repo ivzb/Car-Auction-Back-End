@@ -31,10 +31,26 @@
                 .As(typeof(IDbRepository<,>));
 
             builder
-               .RegisterGeneric(typeof(DefaultService<>))
-               .As(typeof(IDefaultService<>));
+               .RegisterGeneric(typeof(BaseService<>))
+               .As(typeof(IBaseService<>));
 
-            Assembly servicesAssembly = Assembly.GetAssembly(typeof(INomenclatureService));
+            builder
+               .RegisterGeneric(typeof(ValuesService<>))
+               .As(typeof(IValuesService<>));
+            
+            builder
+               .RegisterGeneric(typeof(TitlesService<>))
+               .As(typeof(ITitlesService<>));
+
+            builder
+               .RegisterGeneric(typeof(UrlsService<>))
+               .As(typeof(IUrlsService<>));
+
+            builder
+               .RegisterGeneric(typeof(LotsService<>))
+               .As(typeof(ILotsService<>));
+
+            Assembly servicesAssembly = Assembly.GetAssembly(typeof(IGenericService));
             builder
                 .RegisterAssemblyTypes(servicesAssembly)
                 .AsImplementedInterfaces();

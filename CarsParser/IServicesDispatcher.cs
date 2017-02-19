@@ -5,7 +5,13 @@
 
     public interface IServicesDispatcher
     {
-        void InjectService<T>(IDefaultService<T> service) where T : BaseModel, new();
-        T GetEntity<T>(string entityValue) where T : BaseModel, new();
+        IServicesDispatcher InjectService<T>(IBaseService<T> service)
+            where T : GenericModel<int>, new();
+        T GetEntity<T>(string key)
+            where T : GenericModel<int>, new();
+        bool EntityExists<T>(string key)
+            where T : GenericModel<int>, new();
+        T AddEntity<T>(T entity, string entityKey)
+            where T : GenericModel<int>, new();
     }
 }

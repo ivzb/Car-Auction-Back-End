@@ -112,7 +112,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.Config" />
+    <None Include="App.Config">
+      <SubType>Designer</SubType>
+    </None>
     <EntityDeploy Include="DbContext.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>DbContext.Designer.cs</LastGenOutput>
