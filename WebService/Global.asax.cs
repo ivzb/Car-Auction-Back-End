@@ -13,6 +13,7 @@ namespace WebService
     {
         protected void Application_Start()
         {
+            AutofacConfig.RegisterAutofac();
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);

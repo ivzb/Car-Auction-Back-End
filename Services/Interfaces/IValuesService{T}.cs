@@ -6,6 +6,5 @@
     public interface IValuesService<T> : IBaseService<T>
         where T : ValueModel
     {
-        IDictionary<string, T> GetEntitiesAsDictionary();
     }
 }

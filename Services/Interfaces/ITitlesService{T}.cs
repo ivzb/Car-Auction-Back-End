@@ -6,6 +6,5 @@
     public interface ITitlesService<T> : IBaseService<T>
         where T : TitleModel
     {
-        IDictionary<string, T> GetEntitiesAsDictionary();
     }
 }

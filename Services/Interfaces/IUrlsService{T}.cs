@@ -6,6 +6,5 @@
     public interface IUrlsService<T> : IBaseService<T>
         where T : UrlModel
     {
-        IDictionary<string, T> GetEntitiesAsDictionary();
     }
 }

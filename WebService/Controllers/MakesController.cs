@@ -1,56 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
-using System.Web.Http.ModelBinding;
-using System.Web.Http.OData;
-using System.Web.Http.OData.Routing;
-using WebService.Data;
-
-namespace WebService.Controllers
+﻿namespace WebService.Controllers
 {
-    public class MakesController : ODataController
+    using Data;
+    using Data.ViewModels;
+    using Services.Interfaces;
+    using System.Linq;
+    using System.Web.Http.OData;
+    using WebService.Controllers.Base;
+
+    public class MakesController : GenericController<Make, MakeViewModel>
     {
-        private CopartEntities db = new CopartEntities();
+        public MakesController(IBaseService<Make> service)
+            : base(service)
+        {
+        }
 
         // GET: odata/Makes
         [EnableQuery]
         public IQueryable<Make> GetMakes()
         {
-            return db.Makes;
+            return this.service.Get();
         }
 
         // GET: odata/Makes(5)
         [EnableQuery]
-        public SingleResult<Make> GetMake([FromODataUri] int key)
+        public Make GetMake([FromODataUri] int key)
         {
-            return SingleResult.Create(db.Makes.Where(make => make.Id == key));
+            Make make = this.service.Get(key);
+            return make;
         }
 
         // GET: odata/Makes(5)/Cars
         [EnableQuery]
         public IQueryable<Car> GetCars([FromODataUri] int key)
         {
-            return db.Makes.Where(m => m.Id == key).SelectMany(m => m.Cars);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private bool MakeExists(int key)
-        {
-            return db.Makes.Count(e => e.Id == key) > 0;
+            return this.service.Get().Where(m => m.Id == key).SelectMany(m => m.Cars);
         }
     }
 }

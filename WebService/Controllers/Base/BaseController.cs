@@ -1,26 +1,18 @@
 ﻿namespace WebService.Controllers.Base
 {
+    using AutoMapper;
     using System.Web.Http;
     using System.Web.Http.OData;
-    using WebService.Data;
+    using WebService.Infrastructure.Automapper;
 
     public class BaseController : ODataController
     {
-        public BaseController()
+        protected IMapper Mapper
         {
-            this.Context = new CopartEntities();
-        }
-
-        protected CopartEntities Context { get; private set; }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
+            get
             {
-                this.Context.Dispose();
+                return AutoMapperConfig.Configuration.CreateMapper();
             }
-
-            base.Dispose(disposing);
         }
     }
 }

@@ -6,6 +6,5 @@
     public interface ILotsService<T> : IBaseService<T>
         where T : LotModel
     {
-        IDictionary<string, T> GetEntitiesAsDictionary();
     }
 }

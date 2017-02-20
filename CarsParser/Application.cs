@@ -13,6 +13,8 @@
         private const string carUrl = "https://www.copart.co.uk/public/data/lotdetails/solr/{0}";
         private const string imagesUrl = "https://www.copart.co.uk/public/data/lotdetails/solr/lotImages/{0}";
 
+        private readonly IUrlsService<Image> imagesService;
+
         public Application(
             IValuesService<Make> makesService,
             IValuesService<Model> modelsService,
@@ -24,7 +26,8 @@
             IValuesService<Color> colorsService,
             ILotsService<Car> carsService,
             IUrlsService<Image> imagesService
-        ) {
+        )
+        {
             this.ServicesDispatcher = new ServicesDispatcher()
                 .InjectService<Make>(makesService)
                 .InjectService<Model>(modelsService)
@@ -36,34 +39,47 @@
                 .InjectService<Color>(colorsService)
                 .InjectService<Car>(carsService)
                 .InjectService<Image>(imagesService);
+
+            this.imagesService = imagesService;
         }
 
         private IServicesDispatcher ServicesDispatcher { get; set; }
 
         public void Run()
         {
-#if DEBUG
-            this.FetchCarForLot("19410837");
-#elif RELEASE
-            try
+            string allLotsFile = @"C:\Users\izahariev\Desktop\failedLots.txt";
+            string failedLotsFile = @"C:\Users\izahariev\Desktop\newfailedLots.txt";
+
+            string[] lots = File.ReadAllLines(allLotsFile, System.Text.Encoding.UTF8);
+            int failedCount = 0;
+
+            for (int i = 0; i < lots.Length; i++)
             {
-                this.FetchCarForLot("19410837");
+                try
+                {
+                    Console.Clear();
+                    Console.WriteLine("{0} / {1} total", i, lots.Length);
+                    Console.WriteLine("{0} failed", failedCount);
+                    this.FetchCarForLot(lots[i]);
+                }
+                catch (Exception e)
+                {
+                    failedCount++;
+                    using (StreamWriter writer = new StreamWriter(failedLotsFile, true))
+                    {
+                        writer.WriteLine(lots[i]);
+                    }
+                }
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                // todo: save failed lots in db and examine them later
-            }
-#endif
         }
 
         private void FetchCarForLot(string lot)
         {
             if (this.ServicesDispatcher.EntityExists<Car>(lot))
             {
-                throw new ArgumentException(string.Format("Car with lot #{0} already exists.", lot));
+                return;
             }
-            
+
             WebRequest carRequest = WebRequest.Create(string.Format(carUrl, lot));
             using (WebResponse carResponse = carRequest.GetResponse())
             {
@@ -84,15 +100,15 @@
                     Color color = this.ServicesDispatcher.GetEntity<Color>(lotDetails.clr.ToString());
 
                     int year = lotDetails.lcy;
-                    string title = lotDetails.ld;
-                    string vin = lotDetails.fv;
+                    string title = lotDetails.ld ?? string.Empty;
+                    string vin = lotDetails.fv ?? string.Empty;
                     int estimateValue = lotDetails.la;
                     int odometer = lotDetails.orr;
-                    int engine = int.Parse(Regex.Match(lotDetails.egn.ToString(), @"\d+").Value);
-                    string primaryDamage = lotDetails.dd;
-                    string secondaryDamage = lotDetails.sdd;
-                    string bodyStyle = lotDetails.bstl;
-                    string drive = lotDetails.drv;
+                    int engine = int.Parse(Regex.Match(lotDetails.egn.ToString() ?? string.Empty, @"\d+").Value);
+                    string primaryDamage = lotDetails.dd ?? string.Empty;
+                    string secondaryDamage = lotDetails.sdd ?? string.Empty;
+                    string bodyStyle = lotDetails.bstl ?? string.Empty;
+                    string drive = lotDetails.drv ?? string.Empty;
                     DateTime auctionOn = UnixTimeStampToDateTime((double)lotDetails.ad);
 
                     Car car = new Car
@@ -150,7 +166,7 @@
                     dynamic deserializedResponse = JsonConvert.DeserializeObject(responseJSON);
                     dynamic images = deserializedResponse.data.imagesList.FULL_IMAGE;
 
-                    foreach(dynamic imageJSON in images)
+                    foreach (dynamic imageJSON in images)
                     {
                         string url = imageJSON.url.ToString();
 
@@ -160,7 +176,8 @@
                             CarId = carId
                         };
 
-                        this.ServicesDispatcher.AddEntity<Image>(image, url);
+                        //this.ServicesDispatcher.AddEntity<Image>(image, url);
+                        this.imagesService.Add(image);
                     }
                 }
             }
@@ -168,9 +185,14 @@
 
         public static DateTime UnixTimeStampToDateTime(double unixTime)
         {
-            DateTime unixEpoch = DateTime.ParseExact("1970-01-01", "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
-            DateTime convertedTime = unixEpoch.AddMilliseconds(unixTime);
-            return convertedTime;
+            if (unixTime > 0)
+            {
+                DateTime unixEpoch = DateTime.ParseExact("1970-01-01", "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                DateTime convertedTime = unixEpoch.AddMilliseconds(unixTime);
+                return convertedTime;
+            }
+
+            return DateTime.Now;
         }
     }
 }

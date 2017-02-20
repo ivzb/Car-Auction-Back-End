@@ -1,9 +1,9 @@
 ﻿namespace WebService
 {
+    using Data;
     using System.Web.Http;
     using System.Web.Http.OData.Builder;
     using System.Web.Http.OData.Extensions;
-    using WebService.Data;
 
     public static class WebApiConfig
     {
