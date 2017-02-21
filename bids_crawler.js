@@ -8,17 +8,17 @@ JSON.stringify(output);
 
 
 var cars = {};
-var auctionIndex = 0;
 
 setInterval(function() {
 	var currentCar = {};
 	var info = $('.auction-detail-lot-details').find('tr').find('div.ng-binding');
-	var lot = $(info[1]).text().trim();
+	var lot = $(info[1]).text().trim().substr(5);
 
 	if (cars[lot] == undefined) {
 		currentCar['lot'] = lot;
 		currentCar['bids'] = [];
 		cars[lot] = currentCar;
+		
 	} else {
 		// update bids
 		var currentBids = [];
@@ -28,5 +28,5 @@ setInterval(function() {
 		cars[lot]['bids'] = currentBids;
 	}
 	
-	localStorage['cars'][auctionIndex].setItem(lot, JSON.stringify(cars[lot]));
+	//localStorage['cars'][auctionIndex].setItem(lot, JSON.stringify(cars[lot]));
 }, 1000);

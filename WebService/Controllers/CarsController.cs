@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Web.Http;
     using System.Web.Http.OData;
+    using System.Web.Http.OData.Query;
     using WebService.Controllers.Base;
 
     public class CarsController : BaseController<Car>
@@ -15,14 +16,26 @@
         }
 
         // GET: odata/Cars
-        [EnableQuery]
+        [EnableQuery(
+            PageSize = 21,
+            AllowedArithmeticOperators = AllowedArithmeticOperators.None,
+            AllowedFunctions           = AllowedFunctions.None,
+            AllowedLogicalOperators    = AllowedLogicalOperators.None,
+            AllowedOrderByProperties   = "AuctionOn",
+            AllowedQueryOptions        = AllowedQueryOptions.Expand  |
+                                         AllowedQueryOptions.Top     |
+                                         AllowedQueryOptions.Skip    |
+                                         AllowedQueryOptions.OrderBy)]
         public IQueryable<Car> GetCars()
         {
             return base.Get();
         }
 
         // GET: odata/Cars(5)
-        [EnableQuery]
+        [EnableQuery(
+            AllowedQueryOptions = AllowedQueryOptions.Expand,
+            AllowedFunctions    = AllowedFunctions.None
+        )]
         public SingleResult<Car> GetCar([FromODataUri] int key)
         {
             return base.Get(key);
