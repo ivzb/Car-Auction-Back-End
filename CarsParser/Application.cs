@@ -13,63 +13,81 @@
         private const string carUrl = "https://www.copart.co.uk/public/data/lotdetails/solr/{0}";
         private const string imagesUrl = "https://www.copart.co.uk/public/data/lotdetails/solr/lotImages/{0}";
 
-        private readonly IUrlsService<Image> imagesService;
+        //private readonly IUrlsService<Image> imagesService;
 
         public Application(
-            IValuesService<Make> makesService,
-            IValuesService<Model> modelsService,
-            IValuesService<Category> categoriesService,
-            IValuesService<Location> locationsService,
-            IValuesService<Currency> currenciesService,
-            IValuesService<Transmission> transmissionsService,
-            IValuesService<Fuel> fuelsService,
-            IValuesService<Color> colorsService,
-            ILotsService<Car> carsService,
-            IUrlsService<Image> imagesService
+            //IValuesService<Make> makesService,
+            //IValuesService<Model> modelsService,
+            //IValuesService<Category> categoriesService,
+            //IValuesService<Location> locationsService,
+            //IValuesService<Currency> currenciesService,
+            //IValuesService<Transmission> transmissionsService,
+            //IValuesService<Fuel> fuelsService,
+            //IValuesService<Color> colorsService,
+            //ILotsService<Car> carsService,
+            //IUrlsService<Image> imagesService
         )
         {
-            this.ServicesDispatcher = new ServicesDispatcher()
-                .InjectService<Make>(makesService)
-                .InjectService<Model>(modelsService)
-                .InjectService<Category>(categoriesService)
-                .InjectService<Location>(locationsService)
-                .InjectService<Currency>(currenciesService)
-                .InjectService<Transmission>(transmissionsService)
-                .InjectService<Fuel>(fuelsService)
-                .InjectService<Color>(colorsService)
-                .InjectService<Car>(carsService)
-                .InjectService<Image>(imagesService);
+            //this.ServicesDispatcher = new ServicesDispatcher()
+            //    .InjectService<Make>(makesService)
+            //    .InjectService<Model>(modelsService)
+            //    .InjectService<Category>(categoriesService)
+            //    .InjectService<Location>(locationsService)
+            //    .InjectService<Currency>(currenciesService)
+            //    .InjectService<Transmission>(transmissionsService)
+            //    .InjectService<Fuel>(fuelsService)
+            //    .InjectService<Color>(colorsService)
+            //    .InjectService<Car>(carsService)
+            //    .InjectService<Image>(imagesService);
 
-            this.imagesService = imagesService;
+            //this.imagesService = imagesService;
         }
 
         private IServicesDispatcher ServicesDispatcher { get; set; }
 
         public void Run()
         {
-            string allLotsFile = @"C:\Users\izahariev\Desktop\failedLots.txt";
-            string failedLotsFile = @"C:\Users\izahariev\Desktop\newfailedLots.txt";
+            string allLotsFile = @"C:\Users\izahariev\Desktop\newest_lots.txt";
+            string failedLotsFile = @"C:\Users\izahariev\Desktop\failedLots.txt";
+            string lotsFolder = @"C:\Users\izahariev\Desktop\lots\";
 
             string[] lots = File.ReadAllLines(allLotsFile, System.Text.Encoding.UTF8);
             int failedCount = 0;
 
             for (int i = 0; i < lots.Length; i++)
             {
-                try
+                Console.Clear();
+                Console.WriteLine("{0} / {1} total", i, lots.Length);
+
+                WebRequest carRequest = WebRequest.Create(string.Format(carUrl, lots[i]));
+                using (WebResponse carResponse = carRequest.GetResponse())
                 {
-                    Console.Clear();
-                    Console.WriteLine("{0} / {1} total", i, lots.Length);
-                    Console.WriteLine("{0} failed", failedCount);
-                    this.FetchCarForLot(lots[i]);
-                }
-                catch (Exception e)
-                {
-                    failedCount++;
-                    using (StreamWriter writer = new StreamWriter(failedLotsFile, true))
+                    Stream carDataStream = carResponse.GetResponseStream();
+                    using (StreamReader carReader = new StreamReader(carDataStream))
                     {
-                        writer.WriteLine(lots[i]);
+                        string carResponseJSON = carReader.ReadToEnd();
+
+                        using (StreamWriter writer = new StreamWriter(lotsFolder + (i + 16397) + ".txt", true))
+                        {
+                            writer.Write(carResponseJSON);
+                        }
                     }
                 }
+                //try
+                //{
+                //    Console.Clear();
+                //    Console.WriteLine("{0} / {1} total", i, lots.Length);
+                //    Console.WriteLine("{0} failed", failedCount);
+                //    this.FetchCarForLot(lots[i]);
+                //}
+                //catch (Exception e)
+                //{
+                //    failedCount++;
+                //    using (StreamWriter writer = new StreamWriter(failedLotsFile, true))
+                //    {
+                //        writer.WriteLine(lots[i]);
+                //    }
+                //}
             }
         }
 
@@ -177,7 +195,7 @@
                         };
 
                         //this.ServicesDispatcher.AddEntity<Image>(image, url);
-                        this.imagesService.Add(image);
+                        //this.imagesService.Add(image);
                     }
                 }
             }

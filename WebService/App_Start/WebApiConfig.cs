@@ -17,11 +17,16 @@
             // odata API routes
             ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
             builder.EntitySet<Car>("Cars");
-            builder.EntitySet<Bid>("Bids");
-            builder.EntitySet<Category>("Categories");
-            builder.EntitySet<Make>("Makes");
-            builder.EntitySet<Model>("Models");
-            builder.EntitySet<Image>("Images");
+            builder.EntitySet<Bid>("Bids"); 
+            builder.EntitySet<Category>("Categories"); 
+            builder.EntitySet<Color>("Colors"); 
+            builder.EntitySet<Currency>("Currencies"); 
+            builder.EntitySet<Fuel>("Fuels"); 
+            builder.EntitySet<Location>("Locations"); 
+            builder.EntitySet<Make>("Makes"); 
+            builder.EntitySet<Model>("Models"); 
+            builder.EntitySet<Transmission>("Transmissions"); 
+            builder.EntitySet<Image>("Images"); 
             config.Routes.MapODataServiceRoute("odata", "odata", builder.GetEdmModel());
 
             // default route

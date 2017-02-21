@@ -9,7 +9,7 @@
 
     public class MainClass
     {
-        private const string BidsPath = @"C:\Users\izahariev\Documents\twork\daniauto data\bids\February\15th"; 
+        private const string BidsPath = @"C:\Users\izahariev\Documents\twork\daniauto data\bids\February\20th"; 
         public static void Main(string[] args)
         {
             Parser parser = new Parser();

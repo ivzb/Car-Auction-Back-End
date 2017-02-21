@@ -3,7 +3,9 @@
     using Data.Common;
     using Data.Common.Models;
     using Services.Interfaces;
+    using System;
     using System.Linq;
+    using System.Linq.Expressions;
 
     /// <summary>
     /// Base service for CRUD operations
@@ -25,8 +27,13 @@
         /// Get All
         /// </summary>
         /// <returns>All entities as Queryable</returns>
-        public virtual IQueryable<T> Get()
+        public virtual IQueryable<T> Get(Expression<Func<T, bool>> predicate = null)
         {
+            if (predicate != null)
+            {
+                return this.repository.All().Where(predicate);
+            }
+
             return this.repository.All();
         }
         public virtual T Get(K id)

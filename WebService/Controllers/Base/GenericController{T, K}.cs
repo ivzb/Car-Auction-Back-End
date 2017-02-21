@@ -12,18 +12,16 @@
     using System.Web;
     using WebService.Infrastructure.Automapper;
 
-    public abstract class GenericController<T, K> : BaseController
+    public abstract class GenericController<T, K> : BaseController<T>
         where T : GenericModel<int>
         where K : BaseViewModel
     {
-        protected IBaseService<T> service;
-
         public GenericController(IBaseService<T> service)
+            : base(service)
         {
-            this.service = service;
         }
 
-        protected HttpResponseMessage Get(int id)
+        protected HttpResponseMessage GetValue(int id)
         {
             try
             {
@@ -37,14 +35,14 @@
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
         }
-        protected HttpResponseMessage GetValues(Expression<Func<T, bool>> predicate = null)
+        protected HttpResponseMessage GetValues(Expression<Func<T, bool>> selector = null)
         {
             try
             {
                 IQueryable<T> result = service.Get();
-                if (predicate != null)
+                if (selector != null)
                 {
-                    result = result.Where(predicate);
+                    result = result.Where(selector);
                 }
 
                 IList<K> responseResult = result.To<K>().ToList();
