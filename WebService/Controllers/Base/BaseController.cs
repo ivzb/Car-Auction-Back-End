@@ -8,9 +8,13 @@
     using System.Linq;
     using System.Linq.Expressions;
     using System.Web.Http;
+    using System.Web.Http.Cors;
     using System.Web.Http.OData;
     using WebService.Infrastructure.Automapper;
 
+#if DEBUG
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
+#endif
     public class BaseController<T> : ODataController
         where T : GenericModel<int>
     {

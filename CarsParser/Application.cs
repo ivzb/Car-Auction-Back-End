@@ -13,34 +13,34 @@
         private const string carUrl = "https://www.copart.co.uk/public/data/lotdetails/solr/{0}";
         private const string imagesUrl = "https://www.copart.co.uk/public/data/lotdetails/solr/lotImages/{0}";
 
-        //private readonly IUrlsService<Image> imagesService;
+        private readonly IUrlsService<Image> imagesService;
 
         public Application(
-            //IValuesService<Make> makesService,
-            //IValuesService<Model> modelsService,
-            //IValuesService<Category> categoriesService,
-            //IValuesService<Location> locationsService,
-            //IValuesService<Currency> currenciesService,
-            //IValuesService<Transmission> transmissionsService,
-            //IValuesService<Fuel> fuelsService,
-            //IValuesService<Color> colorsService,
-            //ILotsService<Car> carsService,
-            //IUrlsService<Image> imagesService
+            IValuesService<Make> makesService,
+            IValuesService<Model> modelsService,
+            IValuesService<Category> categoriesService,
+            IValuesService<Location> locationsService,
+            IValuesService<Currency> currenciesService,
+            IValuesService<Transmission> transmissionsService,
+            IValuesService<Fuel> fuelsService,
+            IValuesService<Color> colorsService,
+            ILotsService<Car> carsService,
+            IUrlsService<Image> imagesService
         )
         {
-            //this.ServicesDispatcher = new ServicesDispatcher()
-            //    .InjectService<Make>(makesService)
-            //    .InjectService<Model>(modelsService)
-            //    .InjectService<Category>(categoriesService)
-            //    .InjectService<Location>(locationsService)
-            //    .InjectService<Currency>(currenciesService)
-            //    .InjectService<Transmission>(transmissionsService)
-            //    .InjectService<Fuel>(fuelsService)
-            //    .InjectService<Color>(colorsService)
-            //    .InjectService<Car>(carsService)
-            //    .InjectService<Image>(imagesService);
+            this.ServicesDispatcher = new ServicesDispatcher()
+                .InjectService<Make>(makesService)
+                .InjectService<Model>(modelsService)
+                .InjectService<Category>(categoriesService)
+                .InjectService<Location>(locationsService)
+                .InjectService<Currency>(currenciesService)
+                .InjectService<Transmission>(transmissionsService)
+                .InjectService<Fuel>(fuelsService)
+                .InjectService<Color>(colorsService)
+                .InjectService<Car>(carsService)
+                .InjectService<Image>(imagesService);
 
-            //this.imagesService = imagesService;
+            this.imagesService = imagesService;
         }
 
         private IServicesDispatcher ServicesDispatcher { get; set; }
@@ -51,28 +51,45 @@
             string failedLotsFile = @"C:\Users\izahariev\Desktop\failedLots.txt";
             string lotsFolder = @"C:\Users\izahariev\Desktop\lots\";
 
-            string[] lots = File.ReadAllLines(allLotsFile, System.Text.Encoding.UTF8);
-            int failedCount = 0;
 
-            for (int i = 0; i < lots.Length; i++)
+            string[] jsonFiles = Directory.GetFiles(lotsFolder, "*.txt");
+            int i = 0;
+
+            foreach (string jsonFile in jsonFiles)
             {
-                Console.Clear();
-                Console.WriteLine("{0} / {1} total", i, lots.Length);
-
-                WebRequest carRequest = WebRequest.Create(string.Format(carUrl, lots[i]));
-                using (WebResponse carResponse = carRequest.GetResponse())
+                using (StreamReader sr = new StreamReader(jsonFile))
                 {
-                    Stream carDataStream = carResponse.GetResponseStream();
-                    using (StreamReader carReader = new StreamReader(carDataStream))
-                    {
-                        string carResponseJSON = carReader.ReadToEnd();
+                    string json = sr.ReadToEnd();
+                    this.DispatchCar(json);
 
-                        using (StreamWriter writer = new StreamWriter(lotsFolder + (i + 16397) + ".txt", true))
-                        {
-                            writer.Write(carResponseJSON);
-                        }
-                    }
+                    Console.Clear();
+                    Console.WriteLine("{0}", ++i);
                 }
+            }
+
+
+            //string[] lots = File.ReadAllLines(allLotsFile, System.Text.Encoding.UTF8);
+            //int failedCount = 0;
+
+            //for (int i = 0; i < lots.Length; i++)
+            //{
+            //    Console.Clear();
+            //    Console.WriteLine("{0} / {1} total", i, lots.Length);
+
+            //    WebRequest carRequest = WebRequest.Create(string.Format(carUrl, lots[i]));
+            //    using (WebResponse carResponse = carRequest.GetResponse())
+            //    {
+            //        Stream carDataStream = carResponse.GetResponseStream();
+            //        using (StreamReader carReader = new StreamReader(carDataStream))
+            //        {
+            //            string carResponseJSON = carReader.ReadToEnd();
+
+            //            using (StreamWriter writer = new StreamWriter(lotsFolder + (i + 16397) + ".txt", true))
+            //            {
+            //                writer.Write(carResponseJSON);
+            //            }
+            //        }
+            //    }
                 //try
                 //{
                 //    Console.Clear();
@@ -88,7 +105,78 @@
                 //        writer.WriteLine(lots[i]);
                 //    }
                 //}
+            //}
+        }
+
+        private void DispatchCar(string json)
+        {
+            dynamic carDeserializedResponse = JsonConvert.DeserializeObject(json);
+            dynamic lotDetails = carDeserializedResponse.data.lotDetails;
+
+            string lot = lotDetails.ln;
+
+            if (this.ServicesDispatcher.EntityExists<Car>(lot))
+            {
+                return;
             }
+
+            
+            int year = lotDetails.lcy;
+            string title = lotDetails.ld ?? string.Empty;
+            string vin = lotDetails.fv ?? string.Empty;
+            int estimateValue = lotDetails.la;
+            int odometer = lotDetails.orr;
+
+            int engine = 0;
+            int.TryParse(Regex.Match((lotDetails.egn ?? string.Empty).ToString(), @"\d+").Value, out engine);
+
+            string primaryDamage = lotDetails.dd ?? string.Empty;
+            string secondaryDamage = lotDetails.sdd ?? string.Empty;
+            string bodyStyle = lotDetails.bstl ?? string.Empty;
+            string drive = lotDetails.drv ?? string.Empty;
+
+            double auctionTimestamp = 0;
+            double.TryParse((lotDetails.ad ?? string.Empty).ToString(), out auctionTimestamp);
+            DateTime auctionOn = UnixTimeStampToDateTime(auctionTimestamp);
+
+            Make make = this.ServicesDispatcher.GetEntity<Make>((lotDetails.mkn ?? string.Empty).ToString());
+            Model model = this.ServicesDispatcher.GetEntity<Model>((lotDetails.lm ?? string.Empty).ToString());
+            Category category = this.ServicesDispatcher.GetEntity<Category>((lotDetails.td ?? string.Empty).ToString());
+            Location location = this.ServicesDispatcher.GetEntity<Location>((lotDetails.yn ?? string.Empty).ToString());
+            Currency currency = this.ServicesDispatcher.GetEntity<Currency>((lotDetails.cuc ?? string.Empty).ToString());
+            Transmission transmission = this.ServicesDispatcher.GetEntity<Transmission>((lotDetails.tsmn ?? string.Empty).ToString());
+            Fuel fuel = this.ServicesDispatcher.GetEntity<Fuel>((lotDetails.ftd ?? string.Empty).ToString());
+            Color color = this.ServicesDispatcher.GetEntity<Color>((lotDetails.clr ?? string.Empty).ToString());
+
+            Car car = new Car
+            {
+                MakeId = make.Id,
+                ModelId = model.Id,
+                CategoryId = category.Id,
+                LocationId = location.Id,
+                CurrencyId = currency.Id,
+                TransmissionId = transmission.Id,
+                FuelId = fuel.Id,
+                ColorId = color.Id,
+                Lot = lot,
+                Year = year,
+                Title = title,
+                VIN = vin,
+                EstimateValue = estimateValue,
+                Odometer = odometer,
+                Engine = engine,
+                PrimaryDamage = primaryDamage,
+                SecondaryDamage = secondaryDamage,
+                BodyStyle = bodyStyle,
+                Drive = drive,
+                AuctionOn = auctionOn
+            };
+
+            this.ServicesDispatcher.AddEntity(car, lot);
+
+            // fetch images
+            string carJSON = JsonConvert.SerializeObject(lotDetails);
+            this.FetchImagesForLot(lot, carJSON, car.Id);
         }
 
         private void FetchCarForLot(string lot)
@@ -195,7 +283,7 @@
                         };
 
                         //this.ServicesDispatcher.AddEntity<Image>(image, url);
-                        //this.imagesService.Add(image);
+                        this.imagesService.Add(image);
                     }
                 }
             }
