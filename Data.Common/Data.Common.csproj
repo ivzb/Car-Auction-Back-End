@@ -51,6 +51,7 @@
     <Compile Include="DbRepository{T}.cs" />
     <Compile Include="IDbRepository{T}.cs" />
     <Compile Include="IGenericData.cs" />
+    <Compile Include="Models\CostModel.cs" />
     <Compile Include="Models\LotModel.cs" />
     <Compile Include="Models\TitleModel.cs" />
     <Compile Include="Models\UrlModel.cs" />

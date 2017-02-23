@@ -44,6 +44,22 @@
             return entity;
         }
 
+        public int GetEntityId<T>(string key)
+            where T : GenericModel<int>, new()
+        {
+            string serviceKey = this.GetClassName<T>();
+            IDictionary<string, T> serviceEntities = (IDictionary<string, T>)this.entities[serviceKey];
+            T entity;
+            bool entityExists = serviceEntities.TryGetValue(key, out entity);
+
+            if (entityExists)
+            {
+                return entity.Id;
+            }
+
+            return 0;
+        }
+
         public bool EntityExists<T>(string key)
             where T : GenericModel<int>, new()
         {

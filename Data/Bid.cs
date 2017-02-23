@@ -14,8 +14,6 @@ namespace Data
     
     public partial class Bid
     {
-        public int Cost { get; set; }
-        public string Location { get; set; }
         public int CarId { get; set; }
     
         public virtual Car Car { get; set; }

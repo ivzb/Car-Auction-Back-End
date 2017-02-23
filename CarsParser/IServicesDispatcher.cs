@@ -9,6 +9,8 @@
             where T : GenericModel<int>, new();
         T GetEntity<T>(string key)
             where T : GenericModel<int>, new();
+        int GetEntityId<T>(string key)
+            where T : GenericModel<int>, new();
         bool EntityExists<T>(string key)
             where T : GenericModel<int>, new();
         T AddEntity<T>(T entity, string entityKey)
