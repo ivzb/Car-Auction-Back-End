@@ -21,6 +21,8 @@
             where T : GenericModel<int>, new()
         {
             string key = this.GetClassName<T>();
+            Console.WriteLine("Loading {0}", key);
+
             this.services.Add(key, service);
             this.entities.Add(key, service.GetEntitiesAsDictionary());
 

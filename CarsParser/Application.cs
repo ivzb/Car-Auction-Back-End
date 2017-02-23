@@ -15,7 +15,7 @@
         private const string imagesUrl = "https://www.copart.co.uk/public/data/lotdetails/solr/lotImages/{0}";
 
         private const string lotsPath = @"C:\Users\izahariev\Desktop\lots\";
-        private const string bidsPath = @"C:\Users\izahariev\Documents\twork\daniauto data\bids\";
+        private const string bidsPath = @"C:\Users\izahariev\Documents\twork\daniauto data\bids\February\new bids\";
 
         private readonly IUrlsService<Image> imagesService;
         private readonly IBaseService<Bid> bidsService;
@@ -45,8 +45,7 @@
                 .InjectService<Transmission>(transmissionsService)
                 .InjectService<Fuel>(fuelsService)
                 .InjectService<Color>(colorsService)
-                .InjectService<Car>(carsService)
-                .InjectService<Image>(imagesService);
+                .InjectService<Car>(carsService);
 
             this.imagesService = imagesService;
             this.bidsService = bidsService;
@@ -147,7 +146,6 @@
                             CarId = carId
                         };
 
-                        //this.ServicesDispatcher.AddEntity<Image>(image, url);
                         this.imagesService.Add(image);
                     }
                 }
@@ -159,7 +157,7 @@
             dynamic carDeserializedResponse = JsonConvert.DeserializeObject(json);
             dynamic lotDetails = carDeserializedResponse.data.lotDetails;
 
-            string lot = lotDetails.ln;
+            string lot = lotDetails.ln.ToString();
 
             if (this.ServicesDispatcher.EntityExists<Car>(lot))
             {
@@ -227,15 +225,13 @@
         private void DispatchBidsFromJSON(string json)
         {
             dynamic bidsDeserializedResponse = JsonConvert.DeserializeObject(json);
+            int carCounter = 0;
 
             foreach (dynamic bidObject in bidsDeserializedResponse)
             {
-                int lotNumber;
-                int.TryParse(Regex.Match((bidObject.lot ?? string.Empty).ToString(), @"\d+").Value, out lotNumber);
-                string lot = lotNumber.ToString();
+                Console.WriteLine("Car: {0}/{1}", ++carCounter, bidsDeserializedResponse.Count);
 
-                dynamic dirtyBids = bidObject.bids;
-                List<string> bids = new List<string>();
+                string lot = bidObject.lot.ToString();
 
                 if (!this.ServicesDispatcher.EntityExists<Car>(lot))
                 {
@@ -243,12 +239,14 @@
                 }
 
                 int carId = this.ServicesDispatcher.GetEntityId<Car>(lot);
+                dynamic dirtyBids = bidObject.bids;
+                List<string> bids = new List<string>();
 
                 foreach (string bid in dirtyBids)
                 {
                     if (bid.Contains("£"))
                     {
-                        int cost;
+                        int cost = 0;
                         int.TryParse(Regex.Match(bid, @"\d+").Value, out cost);
 
                         Bid newBid = new Bid
@@ -260,6 +258,8 @@
                         this.bidsService.Add(newBid);
                     }
                 }
+
+                Console.Clear();
             }
         }
 
