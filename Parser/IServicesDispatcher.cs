@@ -1,4 +1,4 @@
-﻿namespace CarsParser
+﻿namespace Parser
 {
     using Data.Common.Models;
     using Services.Interfaces;

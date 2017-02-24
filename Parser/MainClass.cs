@@ -1,23 +1,18 @@
 ﻿namespace Parser
 {
-    using Newtonsoft.Json;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Text.RegularExpressions;
-    using System.Linq;
-    using Data;
+    using Autofac;
 
     public class MainClass
     {
-        private const string BidsPath = @"C:\Users\izahariev\Documents\twork\daniauto data\bids\February\20th"; 
-        public static void Main(string[] args)
+        public static void Main()
         {
-            Parser parser = new Parser();
-            parser.Execute(BidsPath);
-            Car[] cars = parser.Cars;
+            IContainer container = ContainerConfig.Configure();
 
-            DbInflater dbInflater = new DbInflater();
-            dbInflater.Execute(cars);
+            using (ILifetimeScope scope = container.BeginLifetimeScope())
+            {
+                IApplication application = scope.Resolve<IApplication>();
+                application.Run();
+            } 
         }
     }
 }

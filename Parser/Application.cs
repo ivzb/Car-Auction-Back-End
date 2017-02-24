@@ -1,4 +1,4 @@
-﻿namespace CarsParser
+﻿namespace Parser
 {
     using Data;
     using Newtonsoft.Json;
@@ -15,7 +15,7 @@
         private const string imagesUrl = "https://www.copart.co.uk/public/data/lotdetails/solr/lotImages/{0}";
 
         private const string lotsPath = @"C:\Users\izahariev\Desktop\lots\";
-        private const string bidsPath = @"C:\Users\izahariev\Documents\twork\daniauto data\bids\February\new bids\";
+        private const string bidsPath = @"C:\Users\izahariev\Documents\twork\daniauto data\bids\February\new bids\new\";
 
         private readonly IUrlsService<Image> imagesService;
         private readonly IBaseService<Bid> bidsService;

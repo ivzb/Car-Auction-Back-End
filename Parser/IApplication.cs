@@ -1,4 +1,4 @@
-﻿namespace CarsParser
+﻿namespace Parser
 {
     public interface IApplication
     {
