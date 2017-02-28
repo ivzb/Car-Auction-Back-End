@@ -25,7 +25,7 @@
         {
             try
             {
-                T val = service.Get().FirstOrDefault(x => x.Id == id);
+                T val = service.GetAll().FirstOrDefault(x => x.Id == id);
                 K result = Mapper.Map<T, K>(val);
 
                 return Request.CreateResponse(HttpStatusCode.OK, result);
@@ -39,7 +39,7 @@
         {
             try
             {
-                IQueryable<T> result = service.Get();
+                IQueryable<T> result = service.GetAll();
                 if (selector != null)
                 {
                     result = result.Where(selector);

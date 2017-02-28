@@ -29,6 +29,7 @@ namespace Data
         public int TransmissionId { get; set; }
         public int FuelId { get; set; }
         public int ColorId { get; set; }
+        public string Version { get; set; }
         public int Year { get; set; }
         public string Title { get; set; }
         public string VIN { get; set; }

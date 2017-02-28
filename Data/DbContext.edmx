@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="Entities.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Bids">
           <Key>
             <PropertyRef Name="Id" />
@@ -27,6 +27,7 @@
           <Property Name="FuelId" Type="int" Nullable="false" />
           <Property Name="ColorId" Type="int" Nullable="false" />
           <Property Name="Lot" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Version" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Year" Type="int" Nullable="false" />
           <Property Name="Title" Type="nvarchar(max)" Nullable="false" />
           <Property Name="VIN" Type="nvarchar(max)" Nullable="false" />
@@ -95,6 +96,7 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Value" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="MakeId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Transmissions">
           <Key>
@@ -223,7 +225,19 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="ModelStoreContainer">
+        <Association Name="FK_Models_Makes">
+          <End Role="Makes" Type="Self.Makes" Multiplicity="1" />
+          <End Role="Models" Type="Self.Models" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Makes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Models">
+              <PropertyRef Name="MakeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="EntitiesStoreContainer">
           <EntitySet Name="Bids" EntityType="Self.Bids" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Cars" EntityType="Self.Cars" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Categories" EntityType="Self.Categories" Schema="dbo" store:Type="Tables" />
@@ -275,12 +289,16 @@
             <End Role="Cars" EntitySet="Cars" />
             <End Role="Images" EntitySet="Images" />
           </AssociationSet>
+          <AssociationSet Name="FK_Models_Makes" Association="Self.FK_Models_Makes">
+            <End Role="Makes" EntitySet="Makes" />
+            <End Role="Models" EntitySet="Models" />
+          </AssociationSet>
         </EntityContainer>
       </Schema>
     </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="Entities" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="Bid">
           <Key>
             <PropertyRef Name="Id" />
@@ -304,6 +322,7 @@
           <Property Name="FuelId" Type="Int32" Nullable="false" />
           <Property Name="ColorId" Type="Int32" Nullable="false" />
           <Property Name="Lot" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Version" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Year" Type="Int32" Nullable="false" />
           <Property Name="Title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="VIN" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
@@ -382,6 +401,7 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Cars" Relationship="Self.FK_Cars_Makes" FromRole="Makes" ToRole="Cars" />
+          <NavigationProperty Name="Models" Relationship="Self.FK_Models_Makes" FromRole="Makes" ToRole="Models" />
         </EntityType>
         <EntityType Name="Model">
           <Key>
@@ -389,7 +409,9 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MakeId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Cars" Relationship="Self.FK_Cars_Models" FromRole="Models" ToRole="Cars" />
+          <NavigationProperty Name="Make" Relationship="Self.FK_Models_Makes" FromRole="Models" ToRole="Makes" />
         </EntityType>
         <EntityType Name="Transmission">
           <Key>
@@ -519,6 +541,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Models_Makes">
+          <End Role="Makes" Type="Self.Make" Multiplicity="1" />
+          <End Role="Models" Type="Self.Model" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Makes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Models">
+              <PropertyRef Name="MakeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Bids" EntityType="Self.Bid" />
           <EntitySet Name="Cars" EntityType="Self.Car" />
@@ -571,15 +605,19 @@
             <End Role="Cars" EntitySet="Cars" />
             <End Role="Images" EntitySet="Images" />
           </AssociationSet>
+          <AssociationSet Name="FK_Models_Makes" Association="Self.FK_Models_Makes">
+            <End Role="Makes" EntitySet="Makes" />
+            <End Role="Models" EntitySet="Models" />
+          </AssociationSet>
         </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="ModelStoreContainer" CdmEntityContainer="Entities">
+        <EntityContainerMapping StorageEntityContainer="EntitiesStoreContainer" CdmEntityContainer="Entities">
           <EntitySetMapping Name="Bids">
-            <EntityTypeMapping TypeName="Model.Bid">
+            <EntityTypeMapping TypeName="Entities.Bid">
               <MappingFragment StoreEntitySet="Bids">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Cost" ColumnName="Cost" />
@@ -588,7 +626,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Cars">
-            <EntityTypeMapping TypeName="Model.Car">
+            <EntityTypeMapping TypeName="Entities.Car">
               <MappingFragment StoreEntitySet="Cars">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="MakeId" ColumnName="MakeId" />
@@ -600,6 +638,7 @@
                 <ScalarProperty Name="FuelId" ColumnName="FuelId" />
                 <ScalarProperty Name="ColorId" ColumnName="ColorId" />
                 <ScalarProperty Name="Lot" ColumnName="Lot" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
                 <ScalarProperty Name="Year" ColumnName="Year" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
                 <ScalarProperty Name="VIN" ColumnName="VIN" />
@@ -615,7 +654,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Categories">
-            <EntityTypeMapping TypeName="Model.Category">
+            <EntityTypeMapping TypeName="Entities.Category">
               <MappingFragment StoreEntitySet="Categories">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Value" ColumnName="Value" />
@@ -623,7 +662,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Colors">
-            <EntityTypeMapping TypeName="Model.Color">
+            <EntityTypeMapping TypeName="Entities.Color">
               <MappingFragment StoreEntitySet="Colors">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Value" ColumnName="Value" />
@@ -631,7 +670,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Currencies">
-            <EntityTypeMapping TypeName="Model.Currency">
+            <EntityTypeMapping TypeName="Entities.Currency">
               <MappingFragment StoreEntitySet="Currencies">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Value" ColumnName="Value" />
@@ -639,7 +678,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Fuels">
-            <EntityTypeMapping TypeName="Model.Fuel">
+            <EntityTypeMapping TypeName="Entities.Fuel">
               <MappingFragment StoreEntitySet="Fuels">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Value" ColumnName="Value" />
@@ -647,7 +686,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Images">
-            <EntityTypeMapping TypeName="Model.Image">
+            <EntityTypeMapping TypeName="Entities.Image">
               <MappingFragment StoreEntitySet="Images">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Url" ColumnName="Url" />
@@ -656,7 +695,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Locations">
-            <EntityTypeMapping TypeName="Model.Location">
+            <EntityTypeMapping TypeName="Entities.Location">
               <MappingFragment StoreEntitySet="Locations">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Value" ColumnName="Value" />
@@ -664,7 +703,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Makes">
-            <EntityTypeMapping TypeName="Model.Make">
+            <EntityTypeMapping TypeName="Entities.Make">
               <MappingFragment StoreEntitySet="Makes">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Value" ColumnName="Value" />
@@ -672,15 +711,16 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Models">
-            <EntityTypeMapping TypeName="Model.Model">
+            <EntityTypeMapping TypeName="Entities.Model">
               <MappingFragment StoreEntitySet="Models">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="MakeId" ColumnName="MakeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Transmissions">
-            <EntityTypeMapping TypeName="Model.Transmission">
+            <EntityTypeMapping TypeName="Entities.Transmission">
               <MappingFragment StoreEntitySet="Transmissions">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Value" ColumnName="Value" />

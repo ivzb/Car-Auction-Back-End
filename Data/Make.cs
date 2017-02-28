@@ -18,9 +18,12 @@ namespace Data
         public Make()
         {
             this.Cars = new HashSet<Car>();
+            this.Models = new HashSet<Model>();
         }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Car> Cars { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Model> Models { get; set; }
     }
 }

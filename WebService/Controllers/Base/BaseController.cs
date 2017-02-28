@@ -35,24 +35,24 @@
 
         protected IQueryable<T> Get()
         {
-            return this.service.Get();
+            return this.service.GetAll();
         }
 
         protected SingleResult<T> Get(int key)
         {
-            return SingleResult.Create(this.service.Get(x => x.Id == key));
+            return SingleResult.Create(this.service.GetAll(x => x.Id == key));
         }
 
         protected SingleResult<K> Get<K>(int key, Expression<Func<T, K>> selector)
             where K : GenericModel<int>
         {
-            return SingleResult.Create(this.service.Get(x => x.Id == key).Select(selector));
+            return SingleResult.Create(this.service.GetAll(x => x.Id == key).Select(selector));
         }
 
         protected IQueryable<K> Get<K>(int key, Expression<Func<T, IEnumerable<K>>> selector)
             where K : GenericModel<int>
         {
-            return this.service.Get(x => x.Id == key).SelectMany(selector);
+            return this.service.GetAll(x => x.Id == key).SelectMany(selector);
         }
     }
 }

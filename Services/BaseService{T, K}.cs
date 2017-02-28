@@ -23,22 +23,28 @@
             this.repository = repo;
         }
 
+        public virtual T Get(K id)
+        {
+            return this.repository.GetById(id);
+        }
+
+        public virtual T Get(Expression<Func<T, bool>> selector)
+        {
+            return this.repository.All().FirstOrDefault(selector);
+        }
+
         /// <summary>
         /// Get All
         /// </summary>
         /// <returns>All entities as Queryable</returns>
-        public virtual IQueryable<T> Get(Expression<Func<T, bool>> predicate = null)
+        public virtual IQueryable<T> GetAll(Expression<Func<T, bool>> selector = null)
         {
-            if (predicate != null)
+            if (selector != null)
             {
-                return this.repository.All().Where(predicate);
+                return this.repository.All().Where(selector);
             }
 
             return this.repository.All();
-        }
-        public virtual T Get(K id)
-        {
-            return this.repository.GetById(id);
         }
         public virtual void Add(T entity)
         {

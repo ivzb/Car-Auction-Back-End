@@ -8,6 +8,8 @@
     using System.IO;
     using System.Net;
     using System.Text.RegularExpressions;
+    using System.Linq;
+    using System.Diagnostics;
 
     public class Application : IApplication
     {
@@ -15,8 +17,11 @@
         private const string imagesUrl = "https://www.copart.co.uk/public/data/lotdetails/solr/lotImages/{0}";
 
         private const string lotsPath = @"C:\Users\izahariev\Desktop\lots\";
-        private const string bidsPath = @"C:\Users\izahariev\Documents\twork\daniauto data\bids\February\new bids\new\";
+        private const string bidsPath = @"C:\Users\izahariev\Documents\twork\daniauto data\bids\February\exec\";
 
+        private readonly ILotsService<Car> carsService;
+        private readonly IValuesService<Make> makesService;
+        private readonly IValuesService<Model> modelsService;
         private readonly IUrlsService<Image> imagesService;
         private readonly IBaseService<Bid> bidsService;
 
@@ -38,7 +43,7 @@
 
             this.ServicesDispatcher = new ServicesDispatcher()
                 .InjectService<Make>(makesService)
-                .InjectService<Model>(modelsService)
+                //.InjectService<Model>(modelsService)
                 .InjectService<Category>(categoriesService)
                 .InjectService<Location>(locationsService)
                 .InjectService<Currency>(currenciesService)
@@ -47,6 +52,9 @@
                 .InjectService<Color>(colorsService)
                 .InjectService<Car>(carsService);
 
+            this.carsService = carsService;
+            this.makesService = makesService;
+            this.modelsService = modelsService;
             this.imagesService = imagesService;
             this.bidsService = bidsService;
         }
@@ -164,6 +172,11 @@
                 return;
             }
 
+            string dirtyModel = lotDetails.lm ?? string.Empty;
+            string[] splitModel = dirtyModel.Split(' ');
+            string modelValue = (splitModel.Length > 0) ? splitModel[0] : string.Empty;
+            string version = (splitModel.Length > 1) ? string.Join(" ", splitModel.Skip(1)) : string.Empty;
+
             int year = lotDetails.lcy;
             string title = lotDetails.ld ?? string.Empty;
             string vin = lotDetails.fv ?? string.Empty;
@@ -183,7 +196,19 @@
             DateTime auctionOn = UnixTimeStampToDateTime(auctionTimestamp);
 
             Make make = this.ServicesDispatcher.GetEntity<Make>((lotDetails.mkn ?? string.Empty).ToString());
-            Model model = this.ServicesDispatcher.GetEntity<Model>((lotDetails.lm ?? string.Empty).ToString());
+
+            Model model = this.modelsService.Get(x => x.Value == modelValue && x.MakeId == make.Id);
+
+            if (model == null)
+            {
+                model = new Model
+                {
+                    Value = modelValue,
+                    MakeId = make.Id
+                };
+                this.modelsService.Add(model);
+            }
+
             Category category = this.ServicesDispatcher.GetEntity<Category>((lotDetails.td ?? string.Empty).ToString());
             Location location = this.ServicesDispatcher.GetEntity<Location>((lotDetails.yn ?? string.Empty).ToString());
             Currency currency = this.ServicesDispatcher.GetEntity<Currency>((lotDetails.cuc ?? string.Empty).ToString());
@@ -202,6 +227,7 @@
                 FuelId = fuel.Id,
                 ColorId = color.Id,
                 Lot = lot,
+                Version = version,
                 Year = year,
                 Title = title,
                 VIN = vin,

@@ -16,7 +16,7 @@
 
         public override IDictionary<string, T> GetEntitiesAsDictionary()
         {
-            IDictionary<string, T> entities = (IDictionary<string, T>)this.Get().ToDictionary(x => x.Url);
+            IDictionary<string, T> entities = (IDictionary<string, T>)this.GetAll().ToDictionary(x => x.Url);
             return entities;
         }
     }
