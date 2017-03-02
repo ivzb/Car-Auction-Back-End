@@ -17,7 +17,7 @@
         private const string imagesUrl = "https://www.copart.co.uk/public/data/lotdetails/solr/lotImages/{0}";
 
         private const string lotsPath = @"C:\Users\izahariev\Desktop\lots\";
-        private const string bidsPath = @"C:\Users\izahariev\Documents\twork\daniauto data\bids\February\exec\";
+        private const string bidsPath = @"C:\Users\izahariev\Documents\twork\daniauto data\bids\exec\March\1st";
 
         private readonly ILotsService<Car> carsService;
         private readonly IValuesService<Make> makesService;
@@ -86,14 +86,11 @@
                                 this.DispatchCarFromJSON(json);
                                 break;
                             case ParserType.Bid:
-                                this.DispatchBidsFromJSON(json);
+                                this.DispatchBidsFromJSON(json, fileIndex++);
                                 break;
                             default:
                                 throw new InvalidOperationException("Parser type not supported.");
                         }
-
-                        Console.Clear();
-                        Console.WriteLine("File: {0}", ++fileIndex);
                     }
                 }
                 catch (JsonException)
@@ -163,6 +160,14 @@
         private void DispatchCarFromJSON(string json)
         {
             dynamic carDeserializedResponse = JsonConvert.DeserializeObject(json);
+
+            int returnCode = -1;
+
+            if (!int.TryParse(carDeserializedResponse.returnCode.ToString(), out returnCode) || returnCode == -1)
+            {
+                return;
+            }
+
             dynamic lotDetails = carDeserializedResponse.data.lotDetails;
 
             string lot = lotDetails.ln.ToString();
@@ -248,14 +253,15 @@
             this.FetchLotImagesFromWeb(lot, carJSON, car.Id);
         }
 
-        private void DispatchBidsFromJSON(string json)
+        private void DispatchBidsFromJSON(string json, int fileCounter)
         {
             dynamic bidsDeserializedResponse = JsonConvert.DeserializeObject(json);
             int carCounter = 0;
 
             foreach (dynamic bidObject in bidsDeserializedResponse)
             {
-                Console.WriteLine("Car: {0}/{1}", ++carCounter, bidsDeserializedResponse.Count);
+                Console.WriteLine("Car: {0}/{1}", carCounter++, bidsDeserializedResponse.Count);
+                Console.WriteLine("File: {0}", fileCounter);
 
                 string lot = bidObject.lot.ToString();
 
