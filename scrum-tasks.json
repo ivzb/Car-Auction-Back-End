@@ -1,0 +1,15 @@
+{
+	'todo': [
+		{
+			'startedOn': null,
+			'doneOn': null,
+			'task': 'Add Bid creation date to DB. Show bids grouped by creation date in CarComponent chart. Lot auctions might not be accepted and then they are rebidded.'
+		}
+	],
+	'doing': [
+
+	],
+	'done': [
+	
+	]
+}
