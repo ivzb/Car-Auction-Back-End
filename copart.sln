@@ -19,6 +19,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.ViewModels", "Data.Vie
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebService.Infrastructure", "WebService.Infrastructure\WebService.Infrastructure.csproj", "{5C99A8B7-DB06-43E8-ADD9-8EC2D4AA93EF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3D9ADABF-C7DB-4624-9956-C7DA16900622}"
+	ProjectSection(SolutionItems) = preProject
+		scrum-tasks.json = scrum-tasks.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -4,6 +4,16 @@
 			'startedOn': null,
 			'doneOn': null,
 			'task': 'Add Bid creation date to DB. Show bids grouped by creation date in CarComponent chart. Lot auctions might not be accepted and then they are rebidded.'
+		},
+		{
+			'startedOn': null,
+			'doneOn': null,
+			'task': 'Add Make image to DB.'
+		},
+		{
+			'startedOn': null,
+			'doneOn': null,
+			'task': 'Add Model image and description to DB. Group Models by year. Add pro and cons to each Model.'
 		}
 	],
 	'doing': [

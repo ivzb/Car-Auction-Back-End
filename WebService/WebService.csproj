@@ -181,7 +181,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\daniauto_logo.png" />
-    <Content Include="Content\ng2-datepicker.css" />
+    <Content Include="Content\kendo.css" />
     <Content Include="Content\styles.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />

@@ -1,3 +1,5 @@
+// C:\Users\izahariev\Documents\twork\daniauto data\bids\exec\March\2nd\
+
 // output bids
 clear();
 var output = [];
