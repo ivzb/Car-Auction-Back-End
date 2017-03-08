@@ -29,6 +29,4 @@ setInterval(function() {
 		});
 		cars[lot]['bids'] = currentBids;
 	}
-	
-	//localStorage['cars'][auctionIndex].setItem(lot, JSON.stringify(cars[lot]));
 }, 1000);
