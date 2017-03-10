@@ -41,20 +41,16 @@
             return base.Get(key);
         }
 
-        // GET: odata/Makes(5)/Cars
+        // GET: odata/Makes(5)/Models
         [EnableQuery(
-            PageSize = 21,
             AllowedArithmeticOperators = AllowedArithmeticOperators.None,
             AllowedFunctions = AllowedFunctions.None,
             AllowedLogicalOperators = AllowedLogicalOperators.None,
-            AllowedOrderByProperties = "AuctionOn",
-            AllowedQueryOptions = AllowedQueryOptions.Expand |
-                                         AllowedQueryOptions.Top |
-                                         AllowedQueryOptions.Skip |
-                                         AllowedQueryOptions.OrderBy)]
-        public IQueryable<Car> GetCars([FromODataUri] int key)
+            AllowedOrderByProperties = "Value",
+            AllowedQueryOptions = AllowedQueryOptions.OrderBy)]
+        public IQueryable<Model> GetModels([FromODataUri] int key)
         {
-            return base.Get<Car>(key, x => x.Cars);
+            return base.Get<Model>(key, x => x.Models);
         }
     }
 }
