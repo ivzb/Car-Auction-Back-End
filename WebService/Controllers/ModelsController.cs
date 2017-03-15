@@ -20,7 +20,7 @@
             AllowedArithmeticOperators = AllowedArithmeticOperators.None,
             AllowedFunctions = AllowedFunctions.None,
             AllowedLogicalOperators = AllowedLogicalOperators.None,
-            AllowedQueryOptions = AllowedQueryOptions.None)]
+            AllowedQueryOptions = AllowedQueryOptions.Expand)]
         public SingleResult<Model> GetModel([FromODataUri] int key)
         {
             return base.Get(key);
