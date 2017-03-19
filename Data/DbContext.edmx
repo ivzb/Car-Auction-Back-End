@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Entities.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="daniautoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Bids">
           <Key>
             <PropertyRef Name="Id" />
@@ -89,6 +89,7 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Value" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ImageUrl" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Models">
           <Key>
@@ -237,7 +238,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="EntitiesStoreContainer">
+        <EntityContainer Name="daniautoModelStoreContainer">
           <EntitySet Name="Bids" EntityType="Self.Bids" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Cars" EntityType="Self.Cars" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Categories" EntityType="Self.Categories" Schema="dbo" store:Type="Tables" />
@@ -298,7 +299,7 @@
     </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="Entities" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="daniautoModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="Bid">
           <Key>
             <PropertyRef Name="Id" />
@@ -400,6 +401,7 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ImageUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Cars" Relationship="Self.FK_Cars_Makes" FromRole="Makes" ToRole="Cars" />
           <NavigationProperty Name="Models" Relationship="Self.FK_Models_Makes" FromRole="Makes" ToRole="Models" />
         </EntityType>
@@ -553,7 +555,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="daniautoEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Bids" EntityType="Self.Bid" />
           <EntitySet Name="Cars" EntityType="Self.Car" />
           <EntitySet Name="Categories" EntityType="Self.Category" />
@@ -615,9 +617,9 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="EntitiesStoreContainer" CdmEntityContainer="Entities">
+        <EntityContainerMapping StorageEntityContainer="daniautoModelStoreContainer" CdmEntityContainer="daniautoEntities">
           <EntitySetMapping Name="Bids">
-            <EntityTypeMapping TypeName="Entities.Bid">
+            <EntityTypeMapping TypeName="daniautoModel.Bid">
               <MappingFragment StoreEntitySet="Bids">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Cost" ColumnName="Cost" />
@@ -626,7 +628,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Cars">
-            <EntityTypeMapping TypeName="Entities.Car">
+            <EntityTypeMapping TypeName="daniautoModel.Car">
               <MappingFragment StoreEntitySet="Cars">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="MakeId" ColumnName="MakeId" />
@@ -654,7 +656,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Categories">
-            <EntityTypeMapping TypeName="Entities.Category">
+            <EntityTypeMapping TypeName="daniautoModel.Category">
               <MappingFragment StoreEntitySet="Categories">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Value" ColumnName="Value" />
@@ -662,7 +664,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Colors">
-            <EntityTypeMapping TypeName="Entities.Color">
+            <EntityTypeMapping TypeName="daniautoModel.Color">
               <MappingFragment StoreEntitySet="Colors">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Value" ColumnName="Value" />
@@ -670,7 +672,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Currencies">
-            <EntityTypeMapping TypeName="Entities.Currency">
+            <EntityTypeMapping TypeName="daniautoModel.Currency">
               <MappingFragment StoreEntitySet="Currencies">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Value" ColumnName="Value" />
@@ -678,7 +680,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Fuels">
-            <EntityTypeMapping TypeName="Entities.Fuel">
+            <EntityTypeMapping TypeName="daniautoModel.Fuel">
               <MappingFragment StoreEntitySet="Fuels">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Value" ColumnName="Value" />
@@ -686,7 +688,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Images">
-            <EntityTypeMapping TypeName="Entities.Image">
+            <EntityTypeMapping TypeName="daniautoModel.Image">
               <MappingFragment StoreEntitySet="Images">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Url" ColumnName="Url" />
@@ -695,7 +697,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Locations">
-            <EntityTypeMapping TypeName="Entities.Location">
+            <EntityTypeMapping TypeName="daniautoModel.Location">
               <MappingFragment StoreEntitySet="Locations">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Value" ColumnName="Value" />
@@ -703,15 +705,16 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Makes">
-            <EntityTypeMapping TypeName="Entities.Make">
+            <EntityTypeMapping TypeName="daniautoModel.Make">
               <MappingFragment StoreEntitySet="Makes">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="ImageUrl" ColumnName="ImageUrl" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Models">
-            <EntityTypeMapping TypeName="Entities.Model">
+            <EntityTypeMapping TypeName="daniautoModel.Model">
               <MappingFragment StoreEntitySet="Models">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Value" ColumnName="Value" />
@@ -720,7 +723,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Transmissions">
-            <EntityTypeMapping TypeName="Entities.Transmission">
+            <EntityTypeMapping TypeName="daniautoModel.Transmission">
               <MappingFragment StoreEntitySet="Transmissions">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Value" ColumnName="Value" />

@@ -38,7 +38,7 @@
         private static void RegisterServices(ContainerBuilder builder)
         {
             builder
-                .Register(x => new Entities())
+                .Register(x => new daniautoEntities())
                 .As<DbContext>();
 
             builder

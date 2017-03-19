@@ -19,12 +19,14 @@
         [EnableQuery(
             AllowedArithmeticOperators = AllowedArithmeticOperators.None,
             AllowedFunctions = AllowedFunctions.None,
-            AllowedLogicalOperators = AllowedLogicalOperators.None,
-            AllowedOrderByProperties = "Value",
+            AllowedLogicalOperators = AllowedLogicalOperators.Equal |
+                                      AllowedLogicalOperators.NotEqual,
+            AllowedOrderByProperties = "ImageUrl, Value",
             AllowedQueryOptions = AllowedQueryOptions.Expand |
                                          AllowedQueryOptions.Top |
                                          AllowedQueryOptions.Skip |
-                                         AllowedQueryOptions.OrderBy)]
+                                         AllowedQueryOptions.OrderBy |
+                                         AllowedQueryOptions.Filter)]
         public IQueryable<Make> GetMakes()
         {
             return base.Get();

@@ -8,11 +8,6 @@
 		{
 			'startedOn': null,
 			'doneOn': null,
-			'task': 'Add Make image to DB.'
-		},
-		{
-			'startedOn': null,
-			'doneOn': null,
 			'task': 'Add Model image and description to DB. Group Models by year. Add pro and cons to each Model.'
 		}
 	],
@@ -20,6 +15,10 @@
 
 	],
 	'done': [
-	
+		{
+			'startedOn': '19/3/2017',
+			'doneOn': '19/3/2017',
+			'task': 'Add Make image to DB.'
+		},
 	]
 }
